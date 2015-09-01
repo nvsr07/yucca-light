@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringApplicationConfiguration(classes = YuccaLightApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port=9000")
+@Profile("int")
 public class InputApiControllerTest {
 
 	private RestTemplate restTemplate = new TestRestTemplate("sandbox","sandbox$1");

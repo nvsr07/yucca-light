@@ -45,7 +45,7 @@ public class A2AYuccaHandlerConfiguration {
 	
 	@Bean(name="a2aYuccaHandler")
 	@Autowired
-	@ServiceActivator(inputChannel="toYuccaA2AChannelString", outputChannel="outputA2AYuccaChannel", poller = @Poller(fixedDelay = "100")
+	@ServiceActivator(inputChannel="toYuccaA2AChannelString", outputChannel="outputA2AYuccaChannel"//, poller = @Poller(fixedDelay = "100")
 	)
 	public MessageHandler a2aYuccaHandler(){
 		RestTemplate restTemplate = new TestRestTemplate(username,password);
