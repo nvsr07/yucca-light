@@ -17,17 +17,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+@ActiveProfiles("int")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = YuccaLightApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port=9000")
-@Profile("int")
 public class InputApiControllerTest {
 
 	private RestTemplate restTemplate = new TestRestTemplate("sandbox","sandbox$1");
