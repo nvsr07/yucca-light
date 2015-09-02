@@ -21,7 +21,7 @@
 <!-- START: RECEIVED MESSAGE SENT TO YUCCA RT   -->
 <int:publish-subscribe-channel  id="yuccaLikeRtChannel"/>
 
-<int:chain input-channel="yuccaLikeRtChannel">
+<int:chain input-channel="yuccaLikeRtChannel" >
 	<int:header-enricher >
 		<int:header name="gwId" expression="headers.id" overwrite="true"/>
 		<int:header name="gwTimestamp" expression="headers.timestamp" overwrite="true"/>
@@ -47,7 +47,29 @@
 	<int:queue capacity="100"/>
 </int:channel>
 
-<!-- Tra toYuccaRTChannel e outputYuccaChannel o  outputFailureYuccaChannel è presente il realYuccaHandler configurato con annotation --> 
+<int-http:outbound-gateway
+	request-channel="toYuccaRTChannelString"
+	reply-channel="outputYuccaChannel"
+	http-method="POST"
+	url="${yucca.realtime.http.endpoint}/${yucca.tenant.code}"
+	expected-response-type="java.lang.String"
+	reply-timeout="10000"
+	rest-template="httpRestTemplate"
+>
+	<int:poller fixed-delay="100"></int:poller>
+	<int-http:request-handler-advice-chain>
+        <beans:bean class="org.springframework.integration.handler.advice.RequestHandlerCircuitBreakerAdvice">
+            <beans:property name="threshold" value="2" />
+            <beans:property name="halfOpenAfter" value="12000" />
+        </beans:bean>
+	</int-http:request-handler-advice-chain>
+</int-http:outbound-gateway>
+
+ <beans:bean name="httpRestTemplate" class="org.springframework.boot.test.TestRestTemplate">
+ 	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
+ 	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
+ 	<beans:constructor-arg  ><beans:null></beans:null></beans:constructor-arg>
+ </beans:bean>
 
 <!-- END: RECEIVED MESSAGE SENT TO YUCCA RT   -->
 <!-- START: RESPONSE RECEIVED FROM YUCCA IS SAVED ON DB    -->

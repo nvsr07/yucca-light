@@ -19,45 +19,45 @@ import org.springframework.web.client.RestTemplate;
 
 
 
-@Configuration
+@Deprecated
 public class RealYuccaHandlerConfiguration {
-
-	@Value("${yucca.realtime.http.endpoint}")
-	private String baseUrl;
-	
-	@Value("${yucca.tenant.code}")
-	private String codTenant;
-	
-	@Value("${yucca.tenant.username}")
-	private String username;
-	
-	@Value("${yucca.tenant.password}")
-	private String password;
-	
-	@Bean
-	public Advice circuitBreakerAdvice(){
-		RequestHandlerCircuitBreakerAdvice advice = new RequestHandlerCircuitBreakerAdvice();
-		advice.setHalfOpenAfter(12000);
-		advice.setThreshold(2);
-		return advice;
-	}
-
-	
-	@Bean(name="realYuccaHandler")
-	@Autowired
-	@ServiceActivator(inputChannel="toYuccaRTChannelString", outputChannel="outputYuccaChannel", poller = @Poller(fixedDelay = "100")
-	)
-	public MessageHandler realYuccaHandler(){
-		RestTemplate restTemplate = new TestRestTemplate(username,password);
-		HttpRequestExecutingMessageHandler httpHandler = new HttpRequestExecutingMessageHandler(baseUrl+"/"+codTenant+"/",restTemplate);
-		httpHandler.setHttpMethod(HttpMethod.POST);
-		List<Advice> advices = new ArrayList<Advice>();
-		advices.add(circuitBreakerAdvice());
-		httpHandler.setAdviceChain(advices);
-		httpHandler.setSendTimeout(10000);
-		httpHandler.setExpectedResponseType(java.lang.String.class);
-		httpHandler.setOutputChannelName("outputYuccaChannel");
-		return httpHandler;
-	}
-	
+//
+//	@Value("${yucca.realtime.http.endpoint}")
+//	private String baseUrl;
+//	
+//	@Value("${yucca.tenant.code}")
+//	private String codTenant;
+//	
+//	@Value("${yucca.tenant.username}")
+//	private String username;
+//	
+//	@Value("${yucca.tenant.password}")
+//	private String password;
+//	
+//	@Bean
+//	public Advice circuitBreakerAdvice(){
+//		RequestHandlerCircuitBreakerAdvice advice = new RequestHandlerCircuitBreakerAdvice();
+//		advice.setHalfOpenAfter(12000);
+//		advice.setThreshold(2);
+//		return advice;
+//	}
+//
+//	
+//	@Bean(name="realYuccaHandler")
+//	@Autowired
+//	@ServiceActivator(inputChannel="toYuccaRTChannelString", outputChannel="outputYuccaChannel", poller = @Poller(fixedDelay = "100")
+//	)
+//	public MessageHandler realYuccaHandler(){
+//		RestTemplate restTemplate = new TestRestTemplate(username,password);
+//		HttpRequestExecutingMessageHandler httpHandler = new HttpRequestExecutingMessageHandler(baseUrl+"/"+codTenant+"/",restTemplate);
+//		httpHandler.setHttpMethod(HttpMethod.POST);
+//		List<Advice> advices = new ArrayList<Advice>();
+//		advices.add(circuitBreakerAdvice());
+//		httpHandler.setAdviceChain(advices);
+//		httpHandler.setSendTimeout(10000);
+//		httpHandler.setExpectedResponseType(java.lang.String.class);
+//		httpHandler.setOutputChannelName("outputYuccaChannel");
+//		return httpHandler;
+//	}
+//	
 }
