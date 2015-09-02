@@ -1,4 +1,21 @@
-create table if not exists messages (GW_ID varchar(255), GW_TIMESTAMP long, GW_PAYLOAD varchar(2048), STATUS varchar(255), SOURCE_CODE varchar(512), STREAM_CODE varchar(512), ERROR varchar(1024));
-create table if not exists events (GW_ID varchar(255), GW_TIMESTAMP  long, GW_STATUS varchar(255), 
-								  SOURCE_CODE varchar(512), STREAM_CODE varchar(512),IS_APPLICATION boolean,VALUES_JSON varchar(4096), ERROR varchar(1024));
+create table if not exists EVENTS (GW_ID varchar(50), GW_INSERT_TIMESTAMP  long, 
+								   GW_STATUS varchar(50), 
+								   SOURCE_CODE varchar(50), 
+								   STREAM_CODE varchar(50),
+								   IS_APPLICATION boolean,
+								   VALUES_JSON varchar(4096), 
+								   LAST_ATTEMPT_ID varchar(50),
+								   LAST_ATTEMPT_SEND_TIMESTAMP long,
+								   LAST_ATTEMPT_RECEIVE_TIMESTAMP long,
+								   LAST_RESPONSE varchar(4096),
+								   LAST_ENDPOINT varchar(50),
+								   NUM_ATTEMPT long
+								   );
+create table if not exists ATTEMPT_HISTORY (
+								   GW_ID varchar(50), 
+								   ATTEMPT_ID varchar(50),
+								   ATTEMPT_SEND_TIMESTAMP long,
+								   ATTEMPT_RECEIVE_TIMESTAMP long,
+								   RESPONSE varchar(4096),
+								   ENDPOINT varchar(50));
 commit;

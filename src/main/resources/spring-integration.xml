@@ -25,7 +25,7 @@
 	<int:header-enricher >
 		<int:header name="gwId" expression="headers.id" overwrite="true"/>
 		<int:header name="gwTimestamp" expression="headers.timestamp" overwrite="true"/>
-		<int:header name="gwStatus" value="DA_INVIARE_RT" overwrite="true"/>
+		<int:header name="gwStatus" value="GW_RECEIVED" overwrite="true"/>
 	</int:header-enricher>
 	<int:recipient-list-router>
 		<int:recipient channel="toInsertChannel" />
@@ -37,8 +37,8 @@
 <int:chain input-channel="toInsertChannel">
 	<int:object-to-map-transformer />
 	<int-jdbc:outbound-channel-adapter data-source="dataSource" 
-		query="INSERT INTO  events (GW_ID , GW_TIMESTAMP , GW_STATUS, SOURCE_CODE , STREAM_CODE, IS_APPLICATION, VALUES_JSON,  ERROR ) 
-				VALUES (:headers[gwId],:headers[gwTimestamp],:headers[gwStatus],:payload[sourceCode],:payload[streamCode], :payload[application], :payload[measures], null)" />
+		query="INSERT INTO  events (GW_ID , GW_INSERT_TIMESTAMP , GW_STATUS, SOURCE_CODE , STREAM_CODE, IS_APPLICATION, VALUES_JSON ) 
+				VALUES (:headers[gwId],:headers[gwTimestamp],:headers[gwStatus],:payload[sourceCode],:payload[streamCode], :payload[application], :payload[measures])" />
 </int:chain>
 
 <int:channel  id="toYuccaRTChannel"/>
@@ -58,7 +58,7 @@
 <!-- Inserire la logica di verifica funzionale (HTTP 202 o HTTP 503)  -->
 
 <int:header-enricher  input-channel="outputYuccaChannel" output-channel="toUpdateChannel">
-	<int:header name="gwStatus" value="INVIATO_RT" overwrite="true" ></int:header>
+	<int:header name="gwStatus" value="SENT_RT" overwrite="true" ></int:header>
 </int:header-enricher>
 
 
@@ -68,21 +68,21 @@
 <int:chain input-channel="outputFailureYuccaChannel" output-channel="toUpdateChannel">
 	<int:transformer  expression="payload.failedMessage" />
 	<int:header-enricher  >
-		<int:header name="gwStatus" value="DA_INVIARE_A2A" overwrite="true" ></int:header>
+		<int:header name="gwStatus" value="SENDING_FAILED" overwrite="true" ></int:header>
 	</int:header-enricher>
 </int:chain>
 	
 <int:publish-subscribe-channel  id="toUpdateChannel"/>
 <int:logging-channel-adapter channel="toUpdateChannel" log-full-message="true" logger-name="toUpdateChannel"/>
 <int-jdbc:outbound-channel-adapter  channel="toUpdateChannel" data-source="dataSource" 
-	query="UPDATE events set GW_STATUS = :headers[gwStatus], ERROR = :headers[error] WHERE GW_ID = :headers[gwId] " />
+	query="UPDATE events set GW_STATUS = :headers[gwStatus], LAST_RESPONSE = :headers[error] WHERE GW_ID = :headers[gwId] " />
 	
 <!-- END: RESPONSE RECEIVED FROM YUCCA IS SAVED ON DB    -->
 
 <!-- START: MESSAGES TO SEND TO YUCCA A2A ARE SENT   -->
 
-<int-jdbc:inbound-channel-adapter data-source="dataSource" query="select * from events where GW_STATUS = 'DA_INVIARE_A2A' "
-	update="UPDATE events set GW_STATUS = :GW_BATCH_GROUP_ID WHERE GW_ID IN (:GW_ID)" 
+<int-jdbc:inbound-channel-adapter data-source="dataSource" query="select * from events where GW_STATUS = 'SENDING_FAILED' "
+	update="UPDATE events set GW_STATUS = 'SENDING_A2A_PROGRESS' WHERE GW_ID IN (:GW_ID)" 
 	channel="toSendA2AChannel" 
 	max-rows-per-poll="2"
 	update-per-row="true"
