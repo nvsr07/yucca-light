@@ -16,7 +16,7 @@ public class ConsoleController {
 	@RequestMapping("/console")
 	public String home(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model){
 		model.addAttribute("name", name);
-		return "pippo";
+		return "index";
 	}
 	
 	
