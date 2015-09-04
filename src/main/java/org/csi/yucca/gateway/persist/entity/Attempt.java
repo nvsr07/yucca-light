@@ -1,15 +1,16 @@
 package org.csi.yucca.gateway.persist.entity;
 
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "ATTEMPT_HISTORY")
-public class Attempt { 
+@IdClass(AttemptId.class)
+public class Attempt  { 
 
 	@Id
 	@Column(name = "GW_ID", nullable = false)

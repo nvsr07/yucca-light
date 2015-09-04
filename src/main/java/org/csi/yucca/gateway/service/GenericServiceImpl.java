@@ -47,9 +47,11 @@ public class GenericServiceImpl<T, D, ID extends Serializable> implements Generi
 	@Override
 	public List<D> findAll(String Id) {
 		List<D> result = new ArrayList<D>();
+		/*
         for (T t : repository.findAll(Id)) {
             result.add(mapper.map(t, dtoClass));
         }
+        */
         return result;
 	}
 
