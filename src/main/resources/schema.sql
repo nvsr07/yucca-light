@@ -21,4 +21,20 @@ create table if not exists ATTEMPT_HISTORY (
 								   RESPONSE varchar(50),
 								   RESPONSE_DETAIL varchar(4096),
 								   ENDPOINT varchar(50));
+								   
+create table if not exists STREAM_METADATA_CONFIGURATION (
+								   TENANT_CODE varchar(50), 
+								   STREAM_CODE varchar(50), 
+								   VIRTUALENTITY_CODE varchar(50),
+								   DEPLOYMENT_VERSION long,
+								   STREAM_NAME varchar(50),
+								   VIRTUALENTITY_NAME varchar(50),
+								   VIRTUALENTITY_DESCRIPTION varchar(50),
+								   VIRTUALENTITY_TYPE varchar(50),
+								   VIRTUALENTITY_CATEGORY varchar(50),
+								   LASTUPDATE_TIMESTAMP long,
+								   METADATA_JSON varchar(10000),
+								   SCHEMA_JSON varchar(10000),
+								   CONSTRAINT pk_stream_metadata_configuration 
+								   	PRIMARY KEY (TENANT_CODE,STREAM_CODE,VIRTUALENTITY_CODE,DEPLOYMENT_VERSION));								   
 commit;
