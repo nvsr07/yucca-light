@@ -3,9 +3,11 @@
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
 	xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
 	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/integration
@@ -15,11 +17,84 @@
   http://www.springframework.org/schema/integration/jdbc
   http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd
   http://www.springframework.org/schema/integration/http
-  http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
+  http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+  http://www.springframework.org/schema/integration/jms
+  http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+  http://www.springframework.org/schema/util
+  http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+<!-- 
+<beans:bean id="sendingError"  class="org.springframework.integration.channel.MessagePublishingErrorHandler">
+        	<beans:property name="defaultErrorChannel" ref="outputFailureYuccaChannel"/>
+</beans:bean>
+ -->
+
+<!-- message store outbound channels -->
+<int:publish-subscribe-channel  id="toInsertChannel"/>
+<int:logging-channel-adapter channel="toInsertChannel" log-full-message="true" logger-name="toInsertChannel"></int:logging-channel-adapter>
+	<int:chain input-channel="toInsertChannel">
+	<int:object-to-map-transformer />
+	<int-jdbc:outbound-channel-adapter data-source="dataSource" 
+		query="INSERT INTO  EVENTS (GW_ID , GW_INSERT_TIMESTAMP , GW_STATUS, SOURCE_CODE , STREAM_CODE, IS_APPLICATION, VALUES_JSON ) 
+				VALUES (:headers[gwId],:headers[gwTimestamp],:headers[gwStatus],:payload[sourceCode],:payload[streamCode], :payload[application], :payload[measures])" />
+	</int:chain>
+
+<int:publish-subscribe-channel id="toAddAttemptChannel"></int:publish-subscribe-channel>
+<int:logging-channel-adapter channel="toAddAttemptChannel" log-full-message="true" logger-name="toAddAttemptChannel"></int:logging-channel-adapter>
+<int:chain input-channel="toAddAttemptChannel">
+	<int-jdbc:outbound-channel-adapter data-source="dataSource"   
+		query="INSERT INTO  ATTEMPT_HISTORY (GW_ID , ATTEMPT_ID, ATTEMPT_SEND_TIMESTAMP , ATTEMPT_RECEIVE_TIMESTAMP ,RESPONSE, ENDPOINT, FROM_STATUS, TO_STATUS ) 
+				VALUES (:headers[gwId],:headers[gwAttemptId], :headers[timestamp], null, null, 'RT_ENDPOINT' ,:headers[gwStatus] , null)" />
+</int:chain>
+
+<int:publish-subscribe-channel id="toUpdateAttemptChannel"></int:publish-subscribe-channel>
+<int:logging-channel-adapter channel="toUpdateAttemptChannel" log-full-message="true" logger-name="toUpdateAttemptChannel"></int:logging-channel-adapter>
+<int:chain input-channel="toUpdateAttemptChannel">
+	<int-jdbc:outbound-channel-adapter data-source="dataSource"   
+		query="UPDATE ATTEMPT_HISTORY set ATTEMPT_RECEIVE_TIMESTAMP = :headers[timestamp], RESPONSE = :headers[response] , RESPONSE_DETAIL = :headers[responseDetail] , 
+						TO_STATUS = :headers[gwStatus]
+				WHERE GW_ID = :headers[gwId] AND ATTEMPT_ID = :headers[gwAttemptId]"  />
+</int:chain>
+
+
+<!-- general bean -->
+<beans:bean name="httpRestTemplate" class="org.springframework.boot.test.TestRestTemplate">
+ 	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
+ 	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
+ 	<beans:constructor-arg  ><beans:null></beans:null></beans:constructor-arg>
+ 	<beans:property name="messageConverters" >
+ 		<beans:list>
+ 		<beans:bean class="org.springframework.http.converter.StringHttpMessageConverter">
+ 		  <beans:property name="supportedMediaTypes">
+                <beans:array>
+                    <util:constant static-field="org.springframework.http.MediaType.ALL" />
+                </beans:array>
+            </beans:property>
+ 		</beans:bean>
+		<beans:bean class="org.springframework.http.converter.ObjectToStringHttpMessageConverter">
+			<beans:constructor-arg name="conversionService">
+                <beans:bean class="org.springframework.context.support.ConversionServiceFactoryBean">
+		            <beans:property name="converters">
+		        		<beans:list>
+		            		<beans:bean class="org.springframework.core.convert.support.ObjectToStringConverter" />
+		        		</beans:list>
+		    		</beans:property>
+                </beans:bean>
+            </beans:constructor-arg>
+		    <beans:property name="supportedMediaTypes">
+                <beans:array>
+                    <util:constant static-field="org.springframework.http.MediaType.ALL" />
+                </beans:array>
+            </beans:property>
+ 		</beans:bean>
+ 		</beans:list>
+ 	</beans:property>
+</beans:bean>
 
 
 <!-- START: RECEIVED MESSAGE SENT TO YUCCA RT   -->
-<int:publish-subscribe-channel  id="yuccaLikeRtChannel"/>
+<int:channel  id="yuccaLikeRtChannel"/>
 
 <int:chain input-channel="yuccaLikeRtChannel" >
 	<int:header-enricher >
@@ -27,83 +102,108 @@
 		<int:header name="gwTimestamp" expression="headers.timestamp" overwrite="true"/>
 		<int:header name="gwStatus" value="GW_RECEIVED" overwrite="true"/>
 	</int:header-enricher>
-	<int:recipient-list-router>
+	<int:recipient-list-router >
 		<int:recipient channel="toInsertChannel" />
-		<int:recipient channel="toYuccaRTChannel"/>
+		<int:recipient channel="gw_received"/>
 	</int:recipient-list-router>
 </int:chain>
+<int-jms:channel  id="gw_received" 
+	queue-name="yucca_light_gw_received" 
+	connection-factory="jmsConnectionFactory"  
+	>
+</int-jms:channel >
 
-<int:channel  id="toInsertChannel"/>
-<int:chain input-channel="toInsertChannel">
-	<int:object-to-map-transformer />
-	<int-jdbc:outbound-channel-adapter data-source="dataSource" 
-		query="INSERT INTO  events (GW_ID , GW_INSERT_TIMESTAMP , GW_STATUS, SOURCE_CODE , STREAM_CODE, IS_APPLICATION, VALUES_JSON ) 
-				VALUES (:headers[gwId],:headers[gwTimestamp],:headers[gwStatus],:payload[sourceCode],:payload[streamCode], :payload[application], :payload[measures])" />
-</int:chain>
+<int:header-enricher input-channel="gw_received" output-channel="sending_rt_progress">
+	<int:header name="gwStatus" value="SENDING_RT_PROGRESS" overwrite="true"/>
+	<int:header name="gwAttemptId" expression="headers.id" overwrite="true"/>
+</int:header-enricher>
 
-<int:channel  id="toYuccaRTChannel"/>
-<int:object-to-string-transformer input-channel="toYuccaRTChannel" output-channel="toYuccaRTChannelString" />
-<int:channel  id="toYuccaRTChannelString"   datatype="java.lang.String">
-	<int:queue capacity="100"/>
-</int:channel>
+<int-jms:channel  id="sending_rt_progress" 
+	queue-name="yucca_light_sending_rt_progress" 
+	connection-factory="jmsConnectionFactory"
+	>
+	<int-jms:interceptors>
+		<int:wire-tap channel="toAddAttemptChannel" />
+	</int-jms:interceptors>
+</int-jms:channel>
 
-<int-http:outbound-gateway
-	request-channel="toYuccaRTChannelString"
-	reply-channel="outputYuccaChannel"
-	http-method="POST"
-	url="${yucca.realtime.http.endpoint}/${yucca.tenant.code}"
-	expected-response-type="java.lang.String"
-	reply-timeout="10000"
-	rest-template="httpRestTemplate"
->
-	<int:poller fixed-delay="100"></int:poller>
-	<int-http:request-handler-advice-chain>
-        <beans:bean class="org.springframework.integration.handler.advice.RequestHandlerCircuitBreakerAdvice">
-            <beans:property name="threshold" value="2" />
-            <beans:property name="halfOpenAfter" value="12000" />
-        </beans:bean>
-	</int-http:request-handler-advice-chain>
-</int-http:outbound-gateway>
 
- <beans:bean name="httpRestTemplate" class="org.springframework.boot.test.TestRestTemplate">
- 	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
- 	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
- 	<beans:constructor-arg  ><beans:null></beans:null></beans:constructor-arg>
- </beans:bean>
+<int:chain input-channel="sending_rt_progress"  output-channel="nullChannel">
+	<!-- int:object-to-string-transformer></int:object-to-string-transformer --> 
+	<int-http:outbound-gateway
+		http-method="POST"
+		url="${yucca.realtime.http.endpoint}/${yucca.tenant.code}"
+		rest-template="httpRestTemplate"
+		reply-timeout="10000"
+		expected-response-type="java.lang.String"
+	>
+		<int-http:request-handler-advice-chain>
+			<beans:bean class="org.csi.yucca.gateway.integration.PreserveMessageRequestHTTPHandlerAdvice">
+            	<beans:property name="successChannel" ref="outputYuccaRTChannel" />
+            	<beans:property name="failureChannel" ref="outputYuccaRTChannel" />
+        	</beans:bean>
+             <beans:bean class="org.springframework.integration.handler.advice.RequestHandlerCircuitBreakerAdvice">
+	            <beans:property name="threshold" value="2" />
+	            <beans:property name="halfOpenAfter" value="12000" />
+	        </beans:bean>
+		</int-http:request-handler-advice-chain>
+	</int-http:outbound-gateway>
+</int:chain>  
+
+ 
 
 <!-- END: RECEIVED MESSAGE SENT TO YUCCA RT   -->
 <!-- START: RESPONSE RECEIVED FROM YUCCA IS SAVED ON DB    -->
 
-<int:publish-subscribe-channel  id="outputYuccaChannel"/>
-<int:logging-channel-adapter channel="outputYuccaChannel" log-full-message="true" logger-name="outputYuccaChannel"/>
+<int:publish-subscribe-channel  id="outputYuccaRTChannel">
+	<int:interceptors>
+		<int:wire-tap channel="toUpdateAttemptChannel"  />	
+	</int:interceptors>
+</int:publish-subscribe-channel>
 
-<!-- Inserire la logica di verifica funzionale (HTTP 202 o HTTP 503)  -->
+<int:header-value-router header-name="gwStatus"  default-output-channel="sent_invalid" input-channel="outputYuccaRTChannel"
+		resolution-required="false">
+	<int:mapping value="SENDING_FAILED" channel="sending_failed"/>
+	<int:mapping value="SENT_RT" channel="sent_rt"/>
+</int:header-value-router>
 
-<int:header-enricher  input-channel="outputYuccaChannel" output-channel="toUpdateChannel">
-	<int:header name="gwStatus" value="SENT_RT" overwrite="true" ></int:header>
-</int:header-enricher>
 
 
-<int:publish-subscribe-channel  id="outputFailureYuccaChannel" />
-<int:logging-channel-adapter channel="outputFailureYuccaChannel" log-full-message="true" logger-name="outputFailureYuccaChannel"/>
+<int-jms:channel  id="sent_rt" 
+	queue-name="yucca_light_sent_rt" 
+	connection-factory="jmsConnectionFactory"
+	message-driven="false"
+>
+	
+</int-jms:channel>
 
-<int:chain input-channel="outputFailureYuccaChannel" output-channel="toUpdateChannel">
-	<int:transformer  expression="payload.failedMessage" />
-	<int:header-enricher  >
-		<int:header name="gwStatus" value="SENDING_FAILED" overwrite="true" ></int:header>
-	</int:header-enricher>
-</int:chain>
+<int-jms:channel  id="sending_failed" 
+	queue-name="yucca_light_sending_failed" 
+	connection-factory="jmsConnectionFactory"
+	message-driven="false" 
+>
+</int-jms:channel>
+
+<int-jms:channel  id="sent_invalid" 
+	queue-name="yucca_light_sent_invalid" 
+	connection-factory="jmsConnectionFactory"
+	message-driven="false"
+>
+
+</int-jms:channel>
+
+<!-- 
 	
 <int:publish-subscribe-channel  id="toUpdateChannel"/>
 <int:logging-channel-adapter channel="toUpdateChannel" log-full-message="true" logger-name="toUpdateChannel"/>
 <int-jdbc:outbound-channel-adapter  channel="toUpdateChannel" data-source="dataSource" 
 	query="UPDATE events set GW_STATUS = :headers[gwStatus], LAST_RESPONSE = :headers[error] WHERE GW_ID = :headers[gwId] " />
-	
+ -->	
 <!-- END: RESPONSE RECEIVED FROM YUCCA IS SAVED ON DB    -->
 
 <!-- START: MESSAGES TO SEND TO YUCCA A2A ARE SENT   -->
-
-<int-jdbc:inbound-channel-adapter data-source="dataSource" query="select * from events where GW_STATUS = 'SENDING_FAILED' "
+<!-- DEPRECATO
+<int-jdbc:inbound-channel-adapter data-source="dataSource" query="select * from events where GW_STATUS = 'XXX' "
 	update="UPDATE events set GW_STATUS = 'SENDING_A2A_PROGRESS' WHERE GW_ID IN (:GW_ID)" 
 	channel="toSendA2AChannel" 
 	max-rows-per-poll="2"
@@ -116,19 +216,21 @@
 </int-jdbc:inbound-channel-adapter>
 
 
-
 <beans:bean id="parameterSourceFactory"
 		class="org.springframework.integration.jdbc.ExpressionEvaluatingSqlParameterSourceFactory">
 	<beans:property name="parameterExpressions">
 		<beans:map>
-			<beans:entry key="GW_BATCH_GROUP_ID" value="new java.util.Date()" />
+			<beans:entry key="TIMESTAMP" value="new java.util.Date()" />
 		</beans:map>
 	</beans:property>
 </beans:bean>
 
+
+
 <int:publish-subscribe-channel  id="toSendA2AChannel"/>
 <int:logging-channel-adapter channel="toSendA2AChannel" log-full-message="true" logger-name="toSendA2AChannel"/>
 
+ DEPRECATO -->
 
 
 </beans:beans>

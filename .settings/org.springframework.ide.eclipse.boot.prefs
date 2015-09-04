@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 eclipse.preferences.version=1
 spring.boot.launch.profile.history=local;int;dev;
+=======
+eclipse.preferences.version=1
+spring.boot.launch.profile.history=int;dev;
+>>>>>>> branch 'master' of https://github.com/csipiemonte/yucca-light.git

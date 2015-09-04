@@ -1,3 +1,4 @@
 bin/
 src/main/resources/application-int.properties
 target/
+/activemq-data/

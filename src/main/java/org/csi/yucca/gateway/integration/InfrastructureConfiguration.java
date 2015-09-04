@@ -9,6 +9,7 @@ import java.util.concurrent.Executor;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -17,6 +18,8 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ObjectToStringHttpMessageConverter;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.annotation.Transformer;
@@ -31,18 +34,33 @@ import org.springframework.integration.transformer.ExpressionEvaluatingTransform
 import org.springframework.integration.transformer.HeaderEnricher;
 import org.springframework.integration.transformer.support.ExpressionEvaluatingHeaderValueMessageProcessor;
 import org.springframework.integration.transformer.support.HeaderValueMessageProcessor;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.MessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 
 @Configuration
 @IntegrationComponentScan("org.csi.yucca.gateway.integration")
 @EnableIntegration
+@EnableJms
 @ImportResource("spring-integration.xml")
 public class InfrastructureConfiguration {
 
+	
+//	
+//	@Bean
+//	public RestTemplate httpRestTemplate(String username, String password)
+//	{
+//		RestTemplate httpRestTemplate = new TestRestTemplate(username, password, null)	;
+//		HttpMessageConverter conv = new ObjectToStringHttpMessageConverter(org.springframework.context.support.ConversionServiceFactoryBean)
+//		httpRestTemplate.getMessageConverters().add(arg1);
+//	}
+//	
+	
+	
 //	@Bean
 //	public  ThreadPoolTaskExecutor taskExecutor()
 //	{

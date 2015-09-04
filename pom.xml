@@ -24,10 +24,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-batch</artifactId>
-		</dependency>
 <!-- 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -53,7 +49,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>		
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -90,6 +89,10 @@
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-jdbc</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-jms</artifactId>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -98,6 +101,76 @@
         	<groupId>org.scala-lang</groupId>
         	<artifactId>scala-library</artifactId>
         	<version>2.10.4</version>
+        </dependency>
+	    <dependency>
+	      <groupId>org.springframework</groupId>
+	      <artifactId>spring-jms</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.apache.activemq</groupId>
+	      <artifactId>activemq-broker</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.apache.activemq</groupId>
+	      <artifactId>activemq-client</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.apache.activemq</groupId>
+	      <artifactId>activemq-kahadb-store</artifactId>
+	      <version>5.10.2</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>xalan</groupId>
+	    	<artifactId>xalan</artifactId>
+	    	<version>2.7.1</version>
+	    </dependency>
+
+		<!-- apache -->
+		<dependency>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer</artifactId>
+			<version>5.4.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+          	<groupId>org.webjars</groupId>
+          	<artifactId>jquery</artifactId>
+          	<version>2.1.1</version>
+        </dependency>
+        <dependency>
+          	<groupId>org.webjars</groupId>
+          	<artifactId>angularjs</artifactId>
+          	<version>1.4.3</version>
+        </dependency>
+        <dependency>
+    		<groupId>org.webjars</groupId>
+    		<artifactId>bootstrap</artifactId>
+    		<version>3.3.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>bootstrap-glyphicons</artifactId>
+		    <version>bdd2cbfba0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>bootstrap-material-design</artifactId>
+		    <version>0.3.0</version>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 	</dependencies>
 	
