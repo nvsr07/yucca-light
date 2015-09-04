@@ -28,7 +28,7 @@ public class AttemptController {
     @Autowired
     private MessageSource ms;
    
-    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    @RequestMapping(value = "/attempts", method = RequestMethod.GET)
     public @ResponseBody List<AttemptDto> attemptsList(String gwId) {
         return attemptService.findAll(gwId);
     }
