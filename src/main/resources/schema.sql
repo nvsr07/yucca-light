@@ -16,6 +16,9 @@ create table if not exists ATTEMPT_HISTORY (
 								   ATTEMPT_ID varchar(50),
 								   ATTEMPT_SEND_TIMESTAMP long,
 								   ATTEMPT_RECEIVE_TIMESTAMP long,
-								   RESPONSE varchar(4096),
+								   FROM_STATUS varchar(50), 
+								   TO_STATUS varchar(50), 
+								   RESPONSE varchar(50),
+								   RESPONSE_DETAIL varchar(4096),
 								   ENDPOINT varchar(50));
 commit;
