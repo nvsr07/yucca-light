@@ -93,6 +93,8 @@ public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
 
 		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
 		
+		IntegrationTestUtils.logQueueLastElement("yucca_light_sent_a2a", jmsTemplate);
+		
 // two group
 		Assert.assertEquals(numeroMessaggiCoda+2, numeroMessaggiCodaDopo);
     }
@@ -122,16 +124,18 @@ public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
 		
 		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
 		
+		yuccaLikeService.sendEventToYucca(msg3);
 		yuccaLikeService.sendEventToYucca(msg1);
 		yuccaLikeService.sendEventToYucca(msg2);
-		yuccaLikeService.sendEventToYucca(msg3);
 		Thread.sleep(21000);
 
 		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
 		
 //two group
 		Assert.assertEquals(numeroMessaggiCoda+2, numeroMessaggiCodaDopo);
-   }
+
+		IntegrationTestUtils.logQueueLastElement("yucca_light_sent_a2a", jmsTemplate);
+}
 
 
 //	@Test

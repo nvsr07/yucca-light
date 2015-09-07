@@ -2,10 +2,12 @@ package org.csi.yucca.gateway.integration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.csi.yucca.gateway.integration.dto.EventMessage;
+import org.csi.yucca.gateway.util.Conversion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.aggregator.CorrelationStrategy;
 import org.springframework.integration.aggregator.HeaderAttributeCorrelationStrategy;
@@ -19,12 +21,28 @@ public class AggregatorEventForA2A implements CorrelationStrategy {
 	private MessageBuilderFactory messageBuilderFactory;
 	
 	public Message<?> aggregate(List<Message<?>> messages) {
-		List<Object> payloads = new ArrayList<Object>(messages.size());
-		for (Message<?> message : messages) {
-			payloads.add(message.getPayload());
+		EventMessage msg = new EventMessage();
+		String measures = "";
+
+		for (Iterator iterator = messages.iterator(); iterator.hasNext();) {
+			Message<?> message = (Message<?>) iterator.next();
+			EventMessage dto = (EventMessage) message.getPayload();
+			measures += Conversion.extractMeasuresWithoutBrackets(dto.getMeasures());
+			if (!iterator.hasNext())
+			{
+				msg.setApplication(dto.isApplication());
+				msg.setSourceCode(dto.getSourceCode());
+				msg.setStreamCode(dto.getStreamCode());
+				msg.setMeasures("["+measures+"]");
+			}
+			else {
+				measures += ",";
+			}
+				
 		}
 		
-		return messageBuilderFactory.withPayload(payloads).copyHeaders(aggregatedHeaders(messages)).build();
+		
+		return messageBuilderFactory.withPayload(msg).copyHeaders(aggregatedHeaders(messages)).build();
 	}	
 
 	 public Object getCorrelationKey(Message<?> message)

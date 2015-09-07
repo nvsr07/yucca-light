@@ -9,6 +9,7 @@ import java.util.SimpleTimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.csi.yucca.gateway.api.ParseValidationUtil;
 import org.csi.yucca.gateway.api.dto.Measure;
 import org.csi.yucca.gateway.api.dto.StreamSensorEvent;
@@ -31,6 +32,17 @@ public class Conversion {
 		}
 		return null;
 	}
+	
+	public static String extractMeasuresWithoutBrackets(String measures )
+	{
+		String trimSquared = StringUtils.removeEnd(measures.trim(), "]");
+		trimSquared = StringUtils.removeStart(trimSquared, "[");
+		return trimSquared;
+		
+		
+	}
+	
+	
 
 	public static String fromMeasureArray2String(Measure[] values) throws JsonProcessingException {
 		if (values != null)
