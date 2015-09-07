@@ -29,23 +29,24 @@ public class StreamConfigurationDAO {
 					new Object[] { tenantCode, streamCode, virtualEntityCode, deploymentVersion, streamConfiguration.getStreamName(),
 							streamConfiguration.getStreams().getStream().getVirtualEntityName(), streamConfiguration.getStreams().getStream().getVirtualEntityDescription(),
 							streamConfiguration.getStreams().getStream().getVirtualEntityType(), streamConfiguration.getStreams().getStream().getVirtualEntityCategory(), System.currentTimeMillis(),
-							streamConfiguration.getJSonSchema(), streamConfiguration.getJsonMetadata() });
+						 streamConfiguration.getJsonMetadata(), streamConfiguration.getJSonSchema() });
 		} else {
 			String sql = "UPDATE STREAM_METADATA_CONFIGURATION  SET STREAM_NAME=?, VIRTUALENTITY_NAME=?, VIRTUALENTITY_DESCRIPTION=?, VIRTUALENTITY_TYPE=?, VIRTUALENTITY_CATEGORY=?, LASTUPDATE_TIMESTAMP=?, "
 					+ "METADATA_JSON=?, SCHEMA_JSON=? WHERE TENANT_CODE=? AND STREAM_CODE=? AND VIRTUALENTITY_CODE=? AND DEPLOYMENT_VERSION=?";
 			jdbcTemplate.update(sql,
 					new Object[] { streamConfiguration.getStreamName(), streamConfiguration.getStreams().getStream().getVirtualEntityName(),
 							streamConfiguration.getStreams().getStream().getVirtualEntityDescription(), streamConfiguration.getStreams().getStream().getVirtualEntityType(),
-							streamConfiguration.getStreams().getStream().getVirtualEntityCategory(), System.currentTimeMillis(), streamConfiguration.getJSonSchema(),
-							streamConfiguration.getJsonMetadata(), tenantCode, streamCode, virtualEntityCode, deploymentVersion });
+							streamConfiguration.getStreams().getStream().getVirtualEntityCategory(), System.currentTimeMillis(), streamConfiguration.getJsonMetadata(),
+							streamConfiguration.getJSonSchema(), tenantCode, streamCode, virtualEntityCode, deploymentVersion });
 		}
 
 	}
 
 	public StreamMetadata findStreamMetadataConfigurationByPk(String tenantCode, String streamCode, String virtualentityCode, Long deploymentVersion) {
 
-		String sql = "SELECT STREAM_NAME, VIRTUALENTITY_NAME, VIRTUALENTITY_DESCRIPTION, VIRTUALENTITY_TYPE, VIRTUALENTITY_CATEGORY, LASTUPDATE_TIMESTAMP, METADATA_JSON, SCHEMA_JSON "
-				+ "FROM STREAM_METADATA_CONFIGURATION " + "WHERE TENANT_CODE=? AND STREAM_CODE=? AND  VIRTUALENTITY_CODE=? AND DEPLOYMENT_VERSION =?";
+		String sql = "SELECT TENANT_CODE, STREAM_CODE, VIRTUALENTITY_CODE, DEPLOYMENT_VERSION, STREAM_NAME, VIRTUALENTITY_NAME, VIRTUALENTITY_DESCRIPTION, VIRTUALENTITY_TYPE, "
+				+ "VIRTUALENTITY_CATEGORY, LASTUPDATE_TIMESTAMP, METADATA_JSON, SCHEMA_JSON FROM STREAM_METADATA_CONFIGURATION " 
+				+ "WHERE TENANT_CODE=? AND STREAM_CODE=? AND  VIRTUALENTITY_CODE=? AND DEPLOYMENT_VERSION =?";
 
 		try {
 			StreamMetadata streamMetadata = (StreamMetadata) jdbcTemplate.queryForObject(sql, new Object[] { tenantCode, streamCode, virtualentityCode, deploymentVersion },

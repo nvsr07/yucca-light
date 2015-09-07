@@ -2,6 +2,8 @@ package org.csi.yucca.gateway.configuration;
 
 import org.csi.yucca.gateway.YuccaLightApplication;
 import org.junit.Test;
+import org.junit.Assert;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -10,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-@ActiveProfiles("int")
+@ActiveProfiles("local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = YuccaLightApplication.class)
 @WebAppConfiguration
@@ -26,9 +28,15 @@ public class RefreshConfigurationTest {
 	}
 
 	@Test
-	public void test() {
+	public void refreshConfiguration() {
+		try{
 		streamConfigurationManager.refreshConfiguration();
-		
+		Assert.assertTrue(true);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			Assert.assertFalse(true);
+		}
 	}
 
 }
