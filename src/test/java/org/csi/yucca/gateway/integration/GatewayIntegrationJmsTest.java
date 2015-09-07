@@ -43,13 +43,11 @@ import java.util.concurrent.TimeUnit;
 @SpringApplicationConfiguration(classes = YuccaLightApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port=9000")
-public class GatewayIntegrationTest extends AbstractGatewayIntegrationTest{
+public class GatewayIntegrationJmsTest extends AbstractGatewayIntegrationTest{
 	
 	@Autowired
 	private YuccaLikeService yuccaLikeService;
 	
-	@Autowired
-    protected JdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	protected JmsTemplate jmsTemplate;
@@ -66,14 +64,14 @@ public class GatewayIntegrationTest extends AbstractGatewayIntegrationTest{
 		msg.setStreamCode("temperature");
 		msg.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"12.10\" }  } ]");
 
-		int numeroMessaggi = JdbcTestUtils.countRowsInTable(jdbcTemplate, "EVENTS");
+		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light_sent_rt", jmsTemplate);
 		
 		yuccaLikeService.sendEventToYucca(msg);
 		Thread.sleep(2000);
 
-		int numeroMessaggiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "EVENTS");
+		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_rt", jmsTemplate);
 
-		Assert.assertEquals(numeroMessaggi+1, numeroMessaggiDopo);
+		Assert.assertEquals(numeroMessaggiCoda+1, numeroMessaggiCodaDopo);
     }
 
 	@Test
@@ -87,14 +85,14 @@ public class GatewayIntegrationTest extends AbstractGatewayIntegrationTest{
 		msg.setStreamCode("temperature");
 		msg.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"12.sss10\" }  } ]");
 
-		int numeroMessaggi = JdbcTestUtils.countRowsInTable(jdbcTemplate, "EVENTS");
+		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light_sent_invalid", jmsTemplate);
 		
 		yuccaLikeService.sendEventToYucca(msg);
 		Thread.sleep(2000);
 		
-		int numeroMessaggiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "EVENTS");
+		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_invalid", jmsTemplate);
 
-		Assert.assertEquals(numeroMessaggi+1, numeroMessaggiDopo);
+		Assert.assertEquals(numeroMessaggiCoda+1, numeroMessaggiCodaDopo);
    }
 	
 }
