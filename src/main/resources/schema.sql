@@ -33,7 +33,7 @@ create table if not exists STREAM_METADATA_CONFIGURATION (
 								   VIRTUALENTITY_TYPE varchar(50),
 								   VIRTUALENTITY_CATEGORY varchar(50),
 								   LASTUPDATE_TIMESTAMP long,
-								   METADATA_JSON varchar(10000),
+								   METADATA_JSON varchar(50000),
 								   SCHEMA_JSON varchar(10000),
 								   CONSTRAINT pk_stream_metadata_configuration 
 								   	PRIMARY KEY (TENANT_CODE,STREAM_CODE,VIRTUALENTITY_CODE,DEPLOYMENT_VERSION));								   
