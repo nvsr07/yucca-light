@@ -1,5 +1,8 @@
 package org.csi.yucca.gateway.integration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.crsh.console.jline.internal.Log;
 import org.csi.yucca.gateway.util.EventStateEnum;
 import org.springframework.expression.EvaluationContext;
@@ -17,25 +20,25 @@ import org.springframework.util.Assert;
 
 public class PreserveMessageRequestHTTPHandlerAdvice extends AbstractRequestHandlerAdvice {
 
-//	private volatile Expression  onSuccessExpression;
-//	private volatile Expression onFailureExpression;
 
-	private volatile MessageChannel successChannel;
+	private volatile MessageChannel outputChannel;
 
-	private volatile MessageChannel failureChannel;
+	private String statusHeaderName="statusHeaderName";
+	private String httpCodeHeaderName="httpCodeHeaderName";
+	private String responseDetailHeaderName="responseDetailHeaderName";
+
+
+	private String statusValueException="SENDING_FAILED";
+	private Map<String, String> statusValueMap = null;
+	
 
 	private final MessagingTemplate messagingTemplate = new MessagingTemplate();
 
 	private volatile EvaluationContext evaluationContext;
 
-	public void setSuccessChannel(MessageChannel successChannel) {
-		Assert.notNull(successChannel,"'successChannel' must not be null");
-		this.successChannel = successChannel;
-	}
-
-	public void setFailureChannel(MessageChannel failureChannel) {
-		Assert.notNull(failureChannel,"'failureChannel' must not be null");
-		this.failureChannel = failureChannel;
+	public void setOutputChannel(MessageChannel outputChannel) {
+		Assert.notNull(outputChannel,"'successChannel' must not be null");
+		this.outputChannel = outputChannel;
 	}
 
 
@@ -52,16 +55,15 @@ public class PreserveMessageRequestHTTPHandlerAdvice extends AbstractRequestHand
 		try {
 			Object result = callback.execute();
 			
-			if (this.successChannel != null) {
+			if (this.outputChannel != null) {
 				this.evaluateHTTPStatusCodeSuccessExpression(message,result);
 			}
 			return result;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			Exception actualException = this.unwrapExceptionIfNecessary(e);
 
-			if (this.failureChannel != null) {
+			if (this.outputChannel != null) {
 				this.evaluateFailureExpression(message, actualException);
 			}
 			return null;
@@ -70,37 +72,62 @@ public class PreserveMessageRequestHTTPHandlerAdvice extends AbstractRequestHand
 
 	private void evaluateHTTPStatusCodeSuccessExpression(Message<?> message, Object result) throws Exception {
 			Log.info("response:"+result);
-			String response = null;
-			String responseDetail = null;
+			String httpCodeHeaderValue = null;
+			String responseDetailHeaderValue = null;
 			GenericMessage msg = (GenericMessage) result;
 			HttpStatus status = (HttpStatus) msg.getHeaders().get("http_statusCode");
-			String gwStatus = status.is2xxSuccessful()?EventStateEnum.SENT_RT.name():EventStateEnum.SENT_INVALID.name();
-			response = status.toString();
+			httpCodeHeaderValue = status.toString();
+			String statusHeaderValue = statusValueMap.get(status.series().name());
 			if (msg.getPayload() instanceof String)
 			{
-				responseDetail = msg.getPayload().toString();
+				responseDetailHeaderValue = msg.getPayload().toString();
 			}
 			else if (msg.getPayload() instanceof ResponseEntity) 
 			{
 				if (((ResponseEntity)msg.getPayload()).hasBody())  {
-					responseDetail = ((ResponseEntity)msg.getPayload()).getBody().toString();
+					responseDetailHeaderValue = ((ResponseEntity)msg.getPayload()).getBody().toString();
 				}
 			}
 
-			this.messagingTemplate.send(this.successChannel, getMessageBuilderFactory().fromMessage(message).
-					setHeader("responseDetail", responseDetail).setHeader("response", response).
-					setHeader("gwStatus", gwStatus).build());
+			this.messagingTemplate.send(this.outputChannel, getMessageBuilderFactory().fromMessage(message).
+					setHeader(responseDetailHeaderName, responseDetailHeaderValue).setHeader(httpCodeHeaderName, httpCodeHeaderValue).
+					setHeader(statusHeaderName, statusHeaderValue).build());
 	}
 
 	private void evaluateFailureExpression(Message<?> message, Exception exception) throws Exception {
 		Log.info("exception:"+exception.getMessage());
-		this.messagingTemplate.send(this.failureChannel, getMessageBuilderFactory().fromMessage(message).
-				setHeader("responseDetail", exception.getMessage()).setHeader("response", 999).
-				setHeader("gwStatus", EventStateEnum.SENDING_FAILED.name()).build());
+		this.messagingTemplate.send(this.outputChannel, getMessageBuilderFactory().fromMessage(message).
+				setHeader(responseDetailHeaderName, exception.getMessage()).setHeader(httpCodeHeaderName, 999).
+				setHeader(statusHeaderName, statusValueException).build());
 	}
 
 	protected StandardEvaluationContext createEvaluationContext(){
 		return ExpressionUtils.createStandardEvaluationContext(this.getBeanFactory());
+	}
+
+
+	public void setStatusHeaderName(String statusHeaderName) {
+		this.statusHeaderName = statusHeaderName;
+	}
+
+
+	public void setHttpCodeHeaderName(String httpCodeHeaderName) {
+		this.httpCodeHeaderName = httpCodeHeaderName;
+	}
+
+
+	public void setResponseDetailHeaderName(String responseDetailHeaderName) {
+		this.responseDetailHeaderName = responseDetailHeaderName;
+	}
+
+
+	public void setStatusValueException(String statusValueException) {
+		this.statusValueException = statusValueException;
+	}
+
+
+	public void setStatusValueMap(Map<String, String> statusValueMap) {
+		this.statusValueMap = statusValueMap;
 	}
 
 

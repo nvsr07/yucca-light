@@ -1,12 +1,10 @@
 package org.csi.yucca.gateway.util;
 
-import java.sql.ResultSet;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Map;
 import java.util.SimpleTimeZone;
 
 import javax.xml.bind.DatatypeConverter;
@@ -15,7 +13,6 @@ import org.csi.yucca.gateway.api.ParseValidationUtil;
 import org.csi.yucca.gateway.api.dto.Measure;
 import org.csi.yucca.gateway.api.dto.StreamSensorEvent;
 import org.csi.yucca.gateway.integration.dto.EventMessage;
-import org.csi.yucca.gateway.integration.dto.MeasureMessage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
