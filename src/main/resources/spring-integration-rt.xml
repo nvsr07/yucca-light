@@ -44,7 +44,7 @@
 	reply-channel="nullChannel"
 	http-method="POST"
 	url="${yucca.realtime.http.endpoint}/${yucca.tenant.code}"
-	rest-template="httpRestTemplate"
+	rest-template="httpRestRTTemplate"
 	reply-timeout="10000"
 	expected-response-type="java.lang.String"
 >
@@ -52,8 +52,8 @@
 		<beans:bean class="org.csi.yucca.gateway.integration.PreserveMessageRequestHTTPHandlerAdvice">
            	<beans:property name="outputChannel" ref="outputYuccaRTChannel" />
            	<beans:property name="statusHeaderName" value="gwStatus" />
-           	<beans:property name="httpCodeHeaderName" value="response" />
-           	<beans:property name="responseDetailHeaderName" value="responseDetail" />
+           	<beans:property name="httpCodeHeaderName" value="gwAttemptResponse" />
+           	<beans:property name="responseDetailHeaderName" value="gwAttemptResponseDetail" />
            	<beans:property name="statusValueException" value="SENDING_FAILED" />
            	<beans:property name="statusValueMap">
            		<beans:map key-type="java.lang.String" value-type="java.lang.String">

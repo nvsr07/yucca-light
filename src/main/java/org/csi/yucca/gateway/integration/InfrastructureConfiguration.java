@@ -55,5 +55,9 @@ public class InfrastructureConfiguration {
 		return new AggregatorEventForA2A();
 	}
 	
-	
+	@Bean
+	public SplitterEventForA2A splitterEventForA2A()
+	{
+		return new SplitterEventForA2A();
+	}
 }

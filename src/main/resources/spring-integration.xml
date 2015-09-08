@@ -28,7 +28,7 @@
 
 
 	<!-- general bean -->
-<beans:bean name="httpRestTemplate" class="org.springframework.boot.test.TestRestTemplate">
+<beans:bean name="httpRestRTTemplate" class="org.springframework.boot.test.TestRestTemplate">
  	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
  	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
  	<beans:constructor-arg  ><beans:null></beans:null></beans:constructor-arg>
@@ -61,18 +61,51 @@
  	</beans:property>
 </beans:bean>
 
+<beans:bean name="httpRestA2ATemplate" class="org.springframework.boot.test.TestRestTemplate">
+ 	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
+ 	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
+ 	<beans:constructor-arg  ><beans:null></beans:null></beans:constructor-arg>
+ 	<beans:property name="messageConverters" >
+ 		<beans:list>
+ 		<beans:bean class="org.springframework.http.converter.StringHttpMessageConverter">
+ 		  <beans:property name="supportedMediaTypes">
+                <beans:array>
+                    <util:constant static-field="org.springframework.http.MediaType.ALL" />
+                </beans:array>
+            </beans:property>
+ 		</beans:bean>
+		<beans:bean class="org.springframework.http.converter.ObjectToStringHttpMessageConverter">
+			<beans:constructor-arg name="conversionService">
+                <beans:bean class="org.springframework.context.support.ConversionServiceFactoryBean">
+		            <beans:property name="converters">
+		        		<beans:list>
+		            		<beans:bean class="org.csi.yucca.gateway.integration.ObjectToA2AStringConverter" />
+		        		</beans:list>
+		    		</beans:property>
+                </beans:bean>
+            </beans:constructor-arg>
+		    <beans:property name="supportedMediaTypes">
+                <beans:array>
+                    <util:constant static-field="org.springframework.http.MediaType.ALL" />
+                </beans:array>
+            </beans:property>
+ 		</beans:bean>
+ 		</beans:list>
+ 	</beans:property>
+</beans:bean>
+
 
 <!-- START: RECEIVED MESSAGE SENT TO YUCCA RT   -->
 <int:channel  id="yuccaLikeRtChannel"/>
 
 <int-jms:channel  id="gw_received" 
-	queue-name="yucca_light_gw_received" 
+	queue-name="yucca_light.gw_received" 
 	connection-factory="jmsConnectionFactory"  
 	>
 </int-jms:channel >
 
 <int-jms:channel  id="sending_rt_progress" 
-	queue-name="yucca_light_sending_rt_progress" 
+	queue-name="yucca_light.sending_rt_progress" 
 	connection-factory="jmsConnectionFactory"
 	>
 	<int-jms:interceptors>
@@ -87,8 +120,22 @@
 	</int:interceptors>
 </int:publish-subscribe-channel>
 
+
+<int:channel  id="outputYuccaA2ASplitterChannel">
+</int:channel>
+
+
+<int:publish-subscribe-channel  id="outputYuccaA2AChannel">
+	<int:interceptors>
+		<int:wire-tap channel="toUpdateA2AAttemptChannel"  />	
+	</int:interceptors>
+</int:publish-subscribe-channel>
+
+
+
+
 <int-jms:channel  id="sent_rt" 
-	queue-name="yucca_light_sent_rt" 
+	queue-name="yucca_light.sent_rt" 
 	connection-factory="jmsConnectionFactory"
 	message-driven="false"
 >
@@ -96,14 +143,14 @@
 </int-jms:channel>
 
 <int-jms:channel  id="sending_failed" 
-	queue-name="yucca_light_sending_failed" 
+	queue-name="yucca_light.sending_failed" 
 	connection-factory="jmsConnectionFactory"
 	message-driven="false" 
 >
 </int-jms:channel>
 
 <int-jms:channel  id="sent_invalid" 
-	queue-name="yucca_light_sent_invalid" 
+	queue-name="yucca_light.sent_invalid" 
 	connection-factory="jmsConnectionFactory"
 	message-driven="false"
 >
@@ -111,7 +158,7 @@
 </int-jms:channel>
 
 <int-jms:channel  id="sending_a2a_progress" 
-	queue-name="yucca_light_sending_a2a_progress" 
+	queue-name="yucca_light.sending_a2a_progress" 
 	connection-factory="jmsConnectionFactory"
 	>
 	<int-jms:interceptors>
@@ -119,8 +166,14 @@
 	</int-jms:interceptors>
 </int-jms:channel>
 
+<int-jms:channel  id="sending_a2a_call" 
+	queue-name="yucca_light.sending_a2a_call" 
+	connection-factory="jmsConnectionFactory"
+	>
+</int-jms:channel>
+
 <int-jms:channel  id="sent_a2a" 
-	queue-name="yucca_light_sent_a2a" 
+	queue-name="yucca_light.sent_a2a" 
 	connection-factory="jmsConnectionFactory"
 	message-driven="false"
 	>

@@ -7,9 +7,23 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
+import org.csi.yucca.gateway.YuccaLightApplication;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.integration.support.converter.SimpleMessageConverter;
 import org.springframework.messaging.SubscribableChannel;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+@ActiveProfiles("int")
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = YuccaLightApplication.class)
+@WebAppConfiguration
+@IntegrationTest({"server.port=9000",
+	"yucca.realtime.http.endpoint=http://int-strssseam.smartdatanet.it/api/input"
+	})
 public class AbstractGatewayIntegrationTest {
 
 	private static final Logger LOGGER = Logger.getLogger(AbstractGatewayIntegrationTest.class);

@@ -4,8 +4,10 @@ import java.net.URISyntaxException;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections.ListUtils;
 import org.csi.yucca.gateway.YuccaLightApplication;
 import org.csi.yucca.gateway.integration.dto.EventMessage;
+import org.csi.yucca.gateway.integration.dto.MeasureWithRef;
 import org.csi.yucca.gateway.integration.util.AbstractGatewayIntegrationTest;
 import org.csi.yucca.gateway.integration.util.CountDownHandler;
 import org.csi.yucca.gateway.integration.util.IntegrationTestUtils;
@@ -38,16 +40,13 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-@ActiveProfiles("int")
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = YuccaLightApplication.class)
-@WebAppConfiguration
-@IntegrationTest("server.port=9000")
 public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
 	
 	@Autowired
 	private YuccaLikeService yuccaLikeService;
 	
+	@Autowired
+    protected JdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	protected JmsTemplate jmsTemplate;
@@ -62,28 +61,30 @@ public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
 		msg.setApplication(false);
 		msg.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg.setStreamCode("temperature");
-		msg.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"1\" }  } ]");
+		msg.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"1\" }  }")}));
 
 		EventMessage msg1 =  new EventMessage();
 		msg1.setApplication(false);
 		msg1.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg1.setStreamCode("temperature");
-		msg1.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  } ]");
+		msg1.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  }")}));
 
 		EventMessage msg2 =  new EventMessage();
 		msg2.setApplication(false);
 		msg2.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg2.setStreamCode("temperature");
-		msg2.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  } ]");
+		msg2.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  }")}));
 
 		EventMessage msg3 =  new EventMessage();
 		msg3.setApplication(false);
 		msg3.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg3.setStreamCode("temperature");
-		msg3.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  } ]");
+		msg3.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  }")}));
 
+		int numeroTentativi = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
 		
-		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
+		
+		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
 		
 		yuccaLikeService.sendEventToYucca(msg);
 		yuccaLikeService.sendEventToYucca(msg1);
@@ -91,12 +92,15 @@ public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
 		yuccaLikeService.sendEventToYucca(msg3);
 		Thread.sleep(21000);
 
-		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
-		
-		IntegrationTestUtils.logQueueLastElement("yucca_light_sent_a2a", jmsTemplate);
+		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
+
+		int numeroTentativiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
+
+		IntegrationTestUtils.logQueueLastElement("yucca_light.sent_a2a", jmsTemplate);
 		
 // two group
 		Assert.assertEquals(numeroMessaggiCoda+2, numeroMessaggiCodaDopo);
+		Assert.assertEquals(numeroTentativi+8, numeroTentativiDopo);
     }
 	
 	@Test
@@ -108,33 +112,35 @@ public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
 		msg1.setApplication(false);
 		msg1.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg1.setStreamCode("temperature");
-		msg1.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  } ]");
+		msg1.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  }")}));
 
 		EventMessage msg2 =  new EventMessage();
 		msg2.setApplication(false);
 		msg2.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg2.setStreamCode("temperature");
-		msg2.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  } ]");
+		msg2.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  }")}));
 
 		EventMessage msg3 =  new EventMessage();
 		msg3.setApplication(false);
 		msg3.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg3.setStreamCode("umidity");
-		msg3.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  } ]");
+		msg3.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  }")}));
 		
-		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
-		
+		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
+		int numeroTentativi = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
+
 		yuccaLikeService.sendEventToYucca(msg3);
 		yuccaLikeService.sendEventToYucca(msg1);
 		yuccaLikeService.sendEventToYucca(msg2);
 		Thread.sleep(21000);
-
-		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
+		IntegrationTestUtils.logQueueLastElement("yucca_light.sent_a2a", jmsTemplate);
+		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
+		int numeroTentativiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
 		
 //two group
 		Assert.assertEquals(numeroMessaggiCoda+2, numeroMessaggiCodaDopo);
-
-		IntegrationTestUtils.logQueueLastElement("yucca_light_sent_a2a", jmsTemplate);
+		Assert.assertEquals(numeroTentativi+6, numeroTentativiDopo);
+		IntegrationTestUtils.logQueueLastElement("yucca_light.sent_a2a", jmsTemplate);
 }
 
 
