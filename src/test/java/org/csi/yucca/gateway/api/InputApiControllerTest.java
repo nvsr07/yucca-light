@@ -44,7 +44,7 @@ public class InputApiControllerTest {
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
     	RequestEntity<String> json = new RequestEntity<String>("{ a }",headers,
-    												HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+    												HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
     	
     	ResponseEntity<String> result;
 		try {
@@ -67,7 +67,7 @@ public class InputApiControllerTest {
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
     	RequestEntity<String> invalidJson = new RequestEntity<String>("{ a }",headers,
-    												HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+    												HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
     	
     	ResponseEntity<String> result = restTemplate.exchange(invalidJson,String.class);
 
@@ -83,7 +83,7 @@ public class InputApiControllerTest {
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
     	RequestEntity<String> jsonValidButDifferent = new RequestEntity<String>("{ \"a\":\"a\" }",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDifferent,String.class);
 		
@@ -102,7 +102,7 @@ public class InputApiControllerTest {
     	RequestEntity<String> jsonValidButDiffComponent = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c00000\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDiffComponent,String.class);
 		
@@ -121,7 +121,7 @@ public class InputApiControllerTest {
     	RequestEntity<String> jsonValidButDiffComponent = new RequestEntity<String>("{"
     			+ "  \"stream\":\"ss\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c00000\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDiffComponent,String.class);
 		
@@ -139,7 +139,7 @@ public class InputApiControllerTest {
     	RequestEntity<String> jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -158,7 +158,7 @@ public class InputApiControllerTest {
     	RequestEntity<String> jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -167,7 +167,7 @@ public class InputApiControllerTest {
     	jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58+0200\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -176,7 +176,7 @@ public class InputApiControllerTest {
     	jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58.000+0200\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -185,7 +185,7 @@ public class InputApiControllerTest {
 		jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58.000+02:00\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -194,7 +194,7 @@ public class InputApiControllerTest {
 		jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58.000Z\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -203,7 +203,7 @@ public class InputApiControllerTest {
 		jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-ss05-13T17:08:58.000Z\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -216,7 +216,7 @@ public class InputApiControllerTest {
     			+ "{\"time\": \"2014-05-1ss3T17:08:58+0200\",\"components\": { \"c0\": \"17.4\" }},"
     			+ "{\"time\": \"2014-05-13T17:08:58.000+02:00\",\"components\": { \"c0\": \"17.4\" }}"
     			+ "]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -229,7 +229,7 @@ public class InputApiControllerTest {
     			+ "{\"time\": \"2014-05-13T17:08:58+0200\",\"components\": { \"c0\": \"17.4\" }},"
     			+ "{\"time\": \"2014-05-13T17:08:58.000+02:00\",\"components\": { \"c0\": \"17.4\" }}"
     			+ "]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -246,7 +246,7 @@ public class InputApiControllerTest {
     	RequestEntity<String> json = new RequestEntity<String>("{"
     			+ "  \"stream\":\"\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05s-13T17:08:58Z\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	ResponseEntity<String> result = restTemplate.exchange(json,String.class);
 		
@@ -256,7 +256,7 @@ public class InputApiControllerTest {
     	json = new RequestEntity<String>("{"
     			+ "  \"stream\":null,\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05s-13T17:08:58Z\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/sandbox"));
+				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
 
     	result = restTemplate.exchange(json,String.class);
 		
@@ -264,4 +264,23 @@ public class InputApiControllerTest {
 		Assert.assertTrue(result.getBody().toString().contains("E011"));
     	
     }
+	
+//	@Test
+//    public void testJsonAle() throws URISyntaxException {
+//    	MultiValueMap<String, String> headers = new HttpHeaders();
+//    	headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
+//    	headers.add(HttpHeaders.ACCEPT, "application/json");
+//    	
+//    	RequestEntity<String> jsonValidButDiffComponent = new RequestEntity<String>("{"
+//    			+ "  \"stream\":\"story-points\",\"Device\": \"802bd228-0034-4545-8da1-710483597677\",\"values\": [{"
+//  		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"ciao\": \"17\" , \"value\": \"18\" }}]}",headers,
+//				HttpMethod.POST,new URI("http://localhost:9000/api/input/smartlab"));
+//
+//    	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDiffComponent,String.class);
+//		
+//		Assert.assertTrue(result.getStatusCode().is5xxServerError());
+//		Assert.assertTrue(result.getBody().toString().contains("E013"));
+//    	
+//    	
+//    }
 }

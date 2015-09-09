@@ -6,6 +6,9 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.csi.yucca.gateway.api.dto.Measure;
 import org.csi.yucca.gateway.api.dto.StreamSensorEvent;
+import org.csi.yucca.gateway.configuration.StreamConfigurationDAO;
+import org.csi.yucca.gateway.configuration.dto.StreamMetadata;
+import org.csi.yucca.gateway.exception.InsertApiBaseException;
 import org.csi.yucca.gateway.util.Conversion;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,12 +27,35 @@ public class ParseValidationUtil {
     public static final String _msDateFormat_TZ = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     public static final String _secDateFormat_TZ = "yyyy-MM-dd'T'HH:mm:ssZ";
 	
-	public static boolean isValidVersusSchema(JsonNode json, String schemaStr) throws IOException,ProcessingException
+    
+    public static boolean isValidVersusSchema(JsonNode json, String schemaStr) throws IOException,ProcessingException
 	{
 		final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
 		final JsonSchema schema;
 		ProcessingReport pr;
+				
 		JsonNode schemaNode = JsonLoader.fromResource( "/"+schemaStr);
+		schema = factory.getJsonSchema(schemaNode);
+        pr = schema.validate(json);
+		return pr.isSuccess();
+	}
+
+	
+	public static boolean isValidVersusSchema(JsonNode json, String tenantCode, String streamCode, String virtualentityCode, StreamConfigurationDAO streamConfigurationDAO) throws InsertApiBaseException, IOException, ProcessingException
+	{
+		final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+		final JsonSchema schema;
+		ProcessingReport pr;
+				
+		StreamMetadata streamMetadataConfiguration = streamConfigurationDAO.findLastStreamMetadataConfiguration(tenantCode, streamCode, virtualentityCode);
+		if(streamMetadataConfiguration==null || streamMetadataConfiguration.getSchemaJson()==null){
+			log.error("ERROR: Json schema not found - tenant code: " + streamCode +" | stream code: " + streamCode  +" | virtualentity code: " + virtualentityCode);
+			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_STREAM_NOT_FOUND);
+		}
+		
+		JsonNode schemaNode = JsonLoader.fromString(streamMetadataConfiguration.getSchemaJson());
+		
+
 		schema = factory.getJsonSchema(schemaNode);
         pr = schema.validate(json);
 		return pr.isSuccess();
