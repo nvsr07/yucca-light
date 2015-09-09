@@ -1,43 +1,19 @@
 package org.csi.yucca.gateway.integration;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
-import javax.sql.DataSource;
-
-import org.csi.yucca.gateway.YuccaLightApplication;
 import org.csi.yucca.gateway.integration.dto.EventMessage;
 import org.csi.yucca.gateway.integration.dto.MeasureWithRef;
 import org.csi.yucca.gateway.integration.util.AbstractGatewayIntegrationTest;
-import org.csi.yucca.gateway.integration.util.CountDownHandler;
-import org.csi.yucca.gateway.integration.util.IntegrationTestUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.jms.PollableJmsChannel;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.JmsUtils;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.MessagingException;
-import org.springframework.messaging.PollableChannel;
-import org.springframework.messaging.SubscribableChannel;
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.jdbc.JdbcTestUtils;
-
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
 
 public class GatewayIntegrationDBTest extends AbstractGatewayIntegrationTest{
 	
@@ -54,7 +30,10 @@ public class GatewayIntegrationDBTest extends AbstractGatewayIntegrationTest{
 	@Test
 	 public void testSendValidMessage() throws URISyntaxException, InterruptedException {
 		
-		boolean received = false;
+		setMockYuccaRTServiceServer();
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+							requestTo("https://yucca-stream/api/input/"+codTenant)).
+						andRespond(MockRestResponseCreators.withSuccess());
 		
 		EventMessage msg =  new EventMessage();
 		msg.setApplication(false);
@@ -70,12 +49,17 @@ public class GatewayIntegrationDBTest extends AbstractGatewayIntegrationTest{
 		int numeroMessaggiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "EVENTS");
 
 		Assert.assertEquals(numeroMessaggi+1, numeroMessaggiDopo);
+		mockYuccaRTServiceServer.verify();
+		removeMockYuccaRTServiceServer();
     }
 
 	@Test
 	 public void testSend503ValidMessage() throws URISyntaxException, InterruptedException {
 		
-		boolean received = false;
+		setMockYuccaRTServiceServer();
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+							requestTo("https://yucca-stream/api/input/"+codTenant)).
+						andRespond(MockRestResponseCreators.withServerError());
 		
 		EventMessage msg =  new EventMessage();
 		msg.setApplication(false);
@@ -91,6 +75,9 @@ public class GatewayIntegrationDBTest extends AbstractGatewayIntegrationTest{
 		int numeroMessaggiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "EVENTS");
 
 		Assert.assertEquals(numeroMessaggi+1, numeroMessaggiDopo);
+		mockYuccaRTServiceServer.verify();
+		removeMockYuccaRTServiceServer();
+
    }
 	
 }

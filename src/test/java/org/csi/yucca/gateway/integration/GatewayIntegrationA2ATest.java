@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
+import org.springframework.integration.http.outbound.HttpRequestExecutingMessageHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
@@ -18,8 +19,9 @@ import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 
 
-@IntegrationTest({"server.port=9000","yucca.realtime.http.endpoint=http://10.255.255.255/s"	})
+@IntegrationTest({"server.port=9000"})
 public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
+	
 	
 	@Autowired
 	private YuccaLikeService yuccaLikeService;
@@ -34,7 +36,7 @@ public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
 	@Test
 	 public void testSendValidMessage() throws URISyntaxException, InterruptedException {
 
-
+		
 		EventMessage msg =  new EventMessage();
 		msg.setApplication(false);
 		msg.setSourceCode("550e8400-e29b-41d4-a716-446655440000");

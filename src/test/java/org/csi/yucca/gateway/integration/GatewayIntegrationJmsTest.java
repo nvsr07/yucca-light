@@ -48,6 +48,8 @@ public class GatewayIntegrationJmsTest extends AbstractGatewayIntegrationTest{
 
 		Assert.assertEquals(numeroMessaggiCoda+1, numeroMessaggiCodaDopo);
 		mockYuccaRTServiceServer.verify();
+		removeMockYuccaRTServiceServer();
+
     }
 
 	@Test
@@ -73,6 +75,8 @@ public class GatewayIntegrationJmsTest extends AbstractGatewayIntegrationTest{
 
 		Assert.assertEquals(numeroMessaggiCoda+1, numeroMessaggiCodaDopo);
 		mockYuccaRTServiceServer.verify();
+		removeMockYuccaRTServiceServer();
+
    }
 	
 }
