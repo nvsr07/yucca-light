@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 import org.csi.yucca.gateway.integration.dto.EventMessage;
 import org.csi.yucca.gateway.integration.dto.MeasureWithRef;
-import org.csi.yucca.gateway.integration.util.AbstractGatewayIntegrationTest;
 import org.csi.yucca.gateway.integration.util.IntegrationTestUtils;
+import org.csi.yucca.gateway.util.AbstractIntegrationTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.test.web.client.response.MockRestResponseCreators;
 
 
 @IntegrationTest({"server.port=9000"})
-public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
+public class GatewayIntegrationA2ATest extends AbstractIntegrationTest{
 	
 	
 	@Autowired

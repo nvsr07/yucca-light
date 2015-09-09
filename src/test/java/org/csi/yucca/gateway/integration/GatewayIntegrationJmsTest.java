@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 import org.csi.yucca.gateway.integration.dto.EventMessage;
 import org.csi.yucca.gateway.integration.dto.MeasureWithRef;
-import org.csi.yucca.gateway.integration.util.AbstractGatewayIntegrationTest;
 import org.csi.yucca.gateway.integration.util.IntegrationTestUtils;
+import org.csi.yucca.gateway.util.AbstractIntegrationTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 
-public class GatewayIntegrationJmsTest extends AbstractGatewayIntegrationTest{
+public class GatewayIntegrationJmsTest extends AbstractIntegrationTest{
 	
 	@Autowired
 	private YuccaLikeService yuccaLikeService;

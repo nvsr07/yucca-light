@@ -1,4 +1,4 @@
-package org.csi.yucca.gateway.integration.util;
+package org.csi.yucca.gateway.util;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 @WebAppConfiguration
 @IntegrationTest({"server.port=9000",
 	})
-public class AbstractGatewayIntegrationTest {
+public class AbstractIntegrationTest {
 
 	@Value("${yucca.tenant.code}")
 	public String codTenant;
@@ -39,19 +39,29 @@ public class AbstractGatewayIntegrationTest {
 	
 	@Autowired
 	private RestTemplate httpRestA2ATemplate;
-	
+
+	@Autowired
+	private RestTemplate metadataRestTemplate;
+
 	public MockRestServiceServer mockYuccaRTServiceServer; 
 
 	public MockRestServiceServer mockYuccaA2AServiceServer; 
+
+	public MockRestServiceServer mockYuccaMetadataServiceServer; 
 
 	private ClientHttpRequestFactory originalYuccaRTRequestFactory;
 
 	private ClientHttpRequestFactory originalYuccaA2ARequestFactory;
 
+	private ClientHttpRequestFactory originalYuccaMetadataRequestFactory;
+
+	
+
 	@Before
 	public void setUp() throws Exception {
 		originalYuccaRTRequestFactory = httpRestRTTemplate.getRequestFactory();
 		originalYuccaA2ARequestFactory = httpRestA2ATemplate.getRequestFactory();
+		originalYuccaMetadataRequestFactory = metadataRestTemplate.getRequestFactory();
     }
 
 	public void setMockYuccaRTServiceServer()
@@ -74,6 +84,17 @@ public class AbstractGatewayIntegrationTest {
 		httpRestA2ATemplate.setRequestFactory(originalYuccaA2ARequestFactory);
 	}
 
-	private static final Logger LOGGER = Logger.getLogger(AbstractGatewayIntegrationTest.class);
+	public void setMockYuccaMetadataServiceServer()
+	{
+		mockYuccaMetadataServiceServer = MockRestServiceServer.createServer(metadataRestTemplate);
+	}
+
+
+	public void removeMockYuccaMetadataServiceServer()
+	{
+		metadataRestTemplate.setRequestFactory(originalYuccaMetadataRequestFactory);
+	}
+
+	private static final Logger LOGGER = Logger.getLogger(AbstractIntegrationTest.class);
 	
 }

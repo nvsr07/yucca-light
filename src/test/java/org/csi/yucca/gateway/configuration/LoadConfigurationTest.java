@@ -1,21 +1,14 @@
 package org.csi.yucca.gateway.configuration;
 
-import org.csi.yucca.gateway.YuccaLightApplication;
-import org.csi.yucca.gateway.configuration.util.AbstractConfigurationTest;
+import org.csi.yucca.gateway.util.AbstractIntegrationTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 
 
-public class LoadConfigurationTest extends AbstractConfigurationTest {
+public class LoadConfigurationTest extends AbstractIntegrationTest{
 
 	@Autowired
 	private StreamConfigurationManager streamConfigurationManager;
