@@ -36,7 +36,8 @@
     if the size of the group is N (the poll reached the max messages) or 60 seconds time out (poll has less than 100 messages) 
     then the payload with the list of messages is passed to defined output channel
 -->
-<int:poller max-messages-per-poll="3" fixed-rate="${yucca.a2a.poller.fixed-delay}" id="a2aPoller" ></int:poller>
+<int:poller   max-messages-per-poll="${yucca.a2a.poller.maxmessage}" fixed-rate="${yucca.a2a.poller.fixed-delay}" id="a2aPoller" ></int:poller>
+
 
 <int:header-enricher input-channel="sending_failed" output-channel="sending_a2a_progress">
 	<int:header name="gwStatus" value="SENDING_A2A_PROGRESS" overwrite="true"/>

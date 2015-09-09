@@ -1,6 +1,7 @@
 package org.csi.yucca.gateway.configuration;
 
 import org.csi.yucca.gateway.YuccaLightApplication;
+import org.csi.yucca.gateway.configuration.util.AbstractConfigurationTest;
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -11,13 +12,11 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
 
-@ActiveProfiles("local")
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = YuccaLightApplication.class)
-@WebAppConfiguration
-@IntegrationTest("server.port=9000")
-public class RefreshConfigurationTest {
+
+public class RefreshConfigurationTest extends AbstractConfigurationTest {
 
 	@Autowired
 	private StreamConfigurationManager streamConfigurationManager;
@@ -29,6 +28,12 @@ public class RefreshConfigurationTest {
 
 	@Test
 	public void refreshConfiguration() {
+		setMockYuccaMetadataServiceServer();
+
+		mockYuccaMetadataServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-metadatamanagement/management/stream/metadata?tenant=unitTenant&consumerType=yuccaLight")).
+				andRespond(MockRestResponseCreators.withSuccess());
+
 		try{
 		streamConfigurationManager.refreshConfiguration();
 		Assert.assertTrue(true);
@@ -37,6 +42,8 @@ public class RefreshConfigurationTest {
 			e.printStackTrace();
 			Assert.assertFalse(true);
 		}
+		mockYuccaMetadataServiceServer.verify();
+		removeMockYuccaMetadataServiceServer();
 	}
 
 }
