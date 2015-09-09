@@ -1,57 +1,79 @@
 package org.csi.yucca.gateway.integration.util;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.csi.yucca.gateway.YuccaLightApplication;
+import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.integration.support.converter.SimpleMessageConverter;
-import org.springframework.messaging.SubscribableChannel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.RequestMatcher;
+import org.springframework.test.web.client.ResponseCreator;
+import org.springframework.test.web.client.response.DefaultResponseCreator;
+import org.springframework.web.client.RestTemplate;
 
-@ActiveProfiles("int")
+@ActiveProfiles("unit")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = YuccaLightApplication.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=9000",
-	"yucca.realtime.http.endpoint=http://int-strssseam.smartdatanet.it/api/input"
 	})
 public class AbstractGatewayIntegrationTest {
 
+	@Value("${yucca.tenant.code}")
+	public String codTenant;
+	
+	@Autowired
+	private RestTemplate httpRestRTTemplate;
+	
+	@Autowired
+	private RestTemplate httpRestA2ATemplate;
+	
+	public MockRestServiceServer mockYuccaRTServiceServer; 
+
+	public MockRestServiceServer mockYuccaA2AServiceServer; 
+
+	private ClientHttpRequestFactory originalYuccaRTRequestFactory;
+
+	private ClientHttpRequestFactory originalYuccaA2ARequestFactory;
+
+	@Before
+	public void setUp() throws Exception {
+		originalYuccaRTRequestFactory = httpRestRTTemplate.getRequestFactory();
+		originalYuccaA2ARequestFactory = httpRestA2ATemplate.getRequestFactory();
+    }
+
+	public void setMockYuccaRTServiceServer()
+	{
+		mockYuccaRTServiceServer = MockRestServiceServer.createServer(httpRestRTTemplate);
+	}
+
+	public void setMockYuccaA2AServiceServer()
+	{
+		mockYuccaA2AServiceServer = MockRestServiceServer.createServer(httpRestA2ATemplate);
+	}
+
+	public void removeMockYuccaRTServiceServer()
+	{
+		httpRestRTTemplate.setRequestFactory(originalYuccaRTRequestFactory);
+	}
+
+	public void removeMockYuccaA2AServiceServer()
+	{
+		httpRestA2ATemplate.setRequestFactory(originalYuccaA2ARequestFactory);
+	}
+
 	private static final Logger LOGGER = Logger.getLogger(AbstractGatewayIntegrationTest.class);
 	
-	protected boolean verifyJmsMessageReceivedOnOutputChannel(Object obj, SubscribableChannel expectedOutputChannel, CountDownHandler handler) throws JMSException, InterruptedException{
-		return verifyMessageOnOutputChannel(obj, expectedOutputChannel, handler, 7000);
-	}
-
-
-
-	protected boolean verifyMessageOnOutputChannel(Object obj, SubscribableChannel expectedOutputChannel, CountDownHandler handler,int timeoutMillisec) throws JMSException,
-			InterruptedException {
-
-
-		String text = (String) obj;
-
-		CountDownLatch latch = new CountDownLatch(1);
-		handler.setLatch(latch);
-
-		expectedOutputChannel.subscribe(handler);
-
-		boolean latchCountedToZero = latch.await(timeoutMillisec, TimeUnit.MILLISECONDS);
-
-		if (!latchCountedToZero) {
-			LOGGER.warn(String.format("The specified waiting time of the latch (%s ms) elapsed.", timeoutMillisec));
-		}
-
-		return latchCountedToZero;
-
-	}
 }

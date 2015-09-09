@@ -28,10 +28,24 @@
 
 
 	<!-- general bean -->
+ <beans:bean id="httpRTRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+            <beans:property name="readTimeout" value="${yucca.realtime.http.timeout}" />
+            <beans:property name="connectTimeout" value="${yucca.realtime.http.timeout}" />
+</beans:bean>
+
+ <beans:bean id="httpA2ARequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+            <beans:property name="readTimeout" value="${yucca.a2a.http.timeout}" />
+            <beans:property name="connectTimeout" value="${yucca.a2a.http.timeout}" />
+</beans:bean>
+
 <beans:bean name="httpRestRTTemplate" class="org.springframework.boot.test.TestRestTemplate">
  	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
  	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
- 	<beans:constructor-arg  ><beans:null></beans:null></beans:constructor-arg>
+ 	<beans:constructor-arg>
+        <beans:array value-type="org.springframework.boot.test.TestRestTemplate.HttpClientOption">
+        </beans:array>
+ 	</beans:constructor-arg>
+ 	<beans:property name="requestFactory" ref="httpRTRequestFactory"></beans:property>
  	<beans:property name="messageConverters" >
  		<beans:list>
  		<beans:bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -64,7 +78,11 @@
 <beans:bean name="httpRestA2ATemplate" class="org.springframework.boot.test.TestRestTemplate">
  	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
  	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
- 	<beans:constructor-arg  ><beans:null></beans:null></beans:constructor-arg>
+ 	<beans:constructor-arg>
+        <beans:array value-type="org.springframework.boot.test.TestRestTemplate.HttpClientOption">
+        </beans:array>
+ 	</beans:constructor-arg>
+ 	<beans:property name="requestFactory" ref="httpA2ARequestFactory"></beans:property>
  	<beans:property name="messageConverters" >
  		<beans:list>
  		<beans:bean class="org.springframework.http.converter.StringHttpMessageConverter">
