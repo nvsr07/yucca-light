@@ -5,7 +5,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.csi.yucca.gateway.YuccaLightApplication;
+import org.csi.yucca.gateway.util.AbstractIntegrationTest;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
@@ -20,21 +22,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-@ActiveProfiles("int")
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = YuccaLightApplication.class)
-@WebAppConfiguration
-@IntegrationTest("server.port=9000")
-public class InputApiControllerTest {
+public class InputApiControllerTest extends AbstractIntegrationTest {
 
 	private RestTemplate restTemplate = new TestRestTemplate("sandbox","sandbox$1");
 
 	// TODO: Validare uno stream con tutte le componenti, inclusi datetime e longit/latitud 
-	 
+	
+	
     @Test
     public void testCredentialInvalid() throws URISyntaxException {
     	restTemplate = new TestRestTemplate("sandbox","saggndbox$1");
@@ -49,6 +49,7 @@ public class InputApiControllerTest {
     	ResponseEntity<String> result;
 		try {
 			result = restTemplate.exchange(json,String.class);
+			Assert.assertTrue(result.getStatusCode().is4xxClientError());
 		} catch (RestClientException e) {
 			Assert.assertTrue(true);
 			Assert.assertTrue(e.getCause() instanceof HttpRetryException);
@@ -56,7 +57,6 @@ public class InputApiControllerTest {
 			return;
 		}
 
-		Assert.assertFalse(true);
     }
 
 	 
@@ -132,7 +132,13 @@ public class InputApiControllerTest {
     }
 	@Test
     public void testJsonValid() throws URISyntaxException {
-    	MultiValueMap<String, String> headers = new HttpHeaders();
+		setMockYuccaRTServiceServer();
+		
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+		
+		MultiValueMap<String, String> headers = new HttpHeaders();
     	headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
@@ -144,14 +150,49 @@ public class InputApiControllerTest {
     	ResponseEntity<String> result = restTemplate.exchange(jsonValid,String.class);
 		
 		Assert.assertTrue(result.getStatusCode()== HttpStatus.ACCEPTED);
-    	
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		mockYuccaRTServiceServer.verify();
+		removeMockYuccaRTServiceServer();
     	
     }
 	
 	
 	@Test
     public void testJsonDifferentTimeformat() throws URISyntaxException {
-    	MultiValueMap<String, String> headers = new HttpHeaders();
+		setMockYuccaRTServiceServer();
+		
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		MultiValueMap<String, String> headers = new HttpHeaders();
     	headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
@@ -233,8 +274,16 @@ public class InputApiControllerTest {
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
+    	try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
 		Assert.assertTrue(result.getStatusCode().is2xxSuccessful());
-	
+		mockYuccaRTServiceServer.verify();
+		removeMockYuccaRTServiceServer();
 	}
 	
 	@Test

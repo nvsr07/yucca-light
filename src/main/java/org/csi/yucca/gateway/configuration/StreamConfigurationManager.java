@@ -27,16 +27,13 @@ public class StreamConfigurationManager {
 
 	private String codTenant;
 
-	private String username;
-
-	private String password;
+	@Autowired
+	private RestTemplate metadataRestTemplate;
 
 	@Autowired
 	private StreamConfigurationDAO streamConfigurationDAO;
 
-	public StreamConfigurationManager(String baseUrl, String codTenant, String username, String password) {
-		this.username = username;
-		this.password = password;
+	public StreamConfigurationManager(String baseUrl, String codTenant) {
 		this.baseUrl = baseUrl;
 		this.codTenant = codTenant;
 	}
@@ -56,9 +53,7 @@ public class StreamConfigurationManager {
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		RestTemplate restTemplate = new TestRestTemplate(username, password);
-
-		HttpEntity<String> response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		HttpEntity<String> response = metadataRestTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		String streamJson = response.getBody();
 		System.out.println(streamJson);
 		return streamJson;

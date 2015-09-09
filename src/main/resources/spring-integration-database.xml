@@ -33,9 +33,17 @@
 <int:publish-subscribe-channel id="toUpdateAttemptChannel"></int:publish-subscribe-channel>
 <!-- <int:logging-channel-adapter channel="toUpdateAttemptChannel" log-full-message="true" logger-name="toUpdateAttemptChannel"></int:logging-channel-adapter> -->
 <int-jdbc:outbound-channel-adapter data-source="dataSource" channel="toUpdateAttemptChannel"
-		query="UPDATE ATTEMPT_HISTORY set ATTEMPT_RECEIVE_TIMESTAMP = :headers[timestamp], RESPONSE = :headers[response] , RESPONSE_DETAIL = :headers[responseDetail] , 
+		query="UPDATE ATTEMPT_HISTORY set ATTEMPT_RECEIVE_TIMESTAMP = :headers[timestamp], RESPONSE = :headers[gwAttemptResponse] , RESPONSE_DETAIL = :headers[gwAttemptResponseDetail] , 
 					TO_STATUS = :headers[gwStatus]
 			WHERE GW_ID = :headers[gwId] AND ATTEMPT_ID = :headers[gwAttemptId]" />
+			
+<int:publish-subscribe-channel id="toUpdateA2AAttemptChannel"></int:publish-subscribe-channel>
+<!-- <int:logging-channel-adapter channel="toUpdateAttemptChannel" log-full-message="true" logger-name="toUpdateAttemptChannel"></int:logging-channel-adapter> -->
+<int-jdbc:outbound-channel-adapter data-source="dataSource" channel="toUpdateA2AAttemptChannel"
+		query="UPDATE ATTEMPT_HISTORY set ATTEMPT_RECEIVE_TIMESTAMP = :headers[timestamp], RESPONSE = :headers[gwAttemptResponse] , RESPONSE_DETAIL = :headers[gwAttemptResponseDetail] , 
+					TO_STATUS = :headers[gwStatus], ATTEMPT_ID  = :headers[correlationId]
+			WHERE GW_ID = :headers[gwId] AND ATTEMPT_ID = :headers[gwAttemptId]" />
+						
 
 
 </beans:beans>

@@ -1,13 +1,16 @@
 package org.csi.yucca.gateway.integration.dto;
 
 import java.io.Serializable;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class EventMessage implements Serializable{
 
 	private String sourceCode;	
 	private String streamCode;
 	private boolean application;
-	private String measures;
+	private List<MeasureWithRef> measures;
 	public boolean isApplication() {
 		return application;
 	}
@@ -41,22 +44,23 @@ public class EventMessage implements Serializable{
 	}
 
 
-	public String getMeasures() {
+	public List<MeasureWithRef> getMeasures() {
 		return measures;
 	}
 
-	public void setMeasures(String measures) {
+	public void setMeasures(List<MeasureWithRef> measures) {
 		this.measures = measures;
 	}
 
 
 	public String toString() {
 		StringBuilder str = new StringBuilder("{ \"stream\":\"").append(getStreamCode()).append("\",");
-		str.append("\"").append(isApplication()?"application\":\"":"sensor\":\"").append(getSourceCode()).append("\",");
-		str.append("\"values\":").append(getMeasures()).append("}");
+		str.append("\"").append(isApplication()?"application\":\"":"sensor\":\"").append(getSourceCode()).append("\"");
+		str.append(",\"values\":[");
+		str.append(StringUtils.join(measures, ','));
+		str.append("]}");
 		return str.toString();
 	}
-
 
 
 }

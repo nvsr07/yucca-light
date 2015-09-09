@@ -1,137 +1,154 @@
 package org.csi.yucca.gateway.integration;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
-import javax.sql.DataSource;
-
-import org.csi.yucca.gateway.YuccaLightApplication;
 import org.csi.yucca.gateway.integration.dto.EventMessage;
-import org.csi.yucca.gateway.integration.util.AbstractGatewayIntegrationTest;
-import org.csi.yucca.gateway.integration.util.CountDownHandler;
+import org.csi.yucca.gateway.integration.dto.MeasureWithRef;
 import org.csi.yucca.gateway.integration.util.IntegrationTestUtils;
+import org.csi.yucca.gateway.util.AbstractIntegrationTest;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.jms.PollableJmsChannel;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.integration.http.outbound.HttpRequestExecutingMessageHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.JmsUtils;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.MessagingException;
-import org.springframework.messaging.PollableChannel;
-import org.springframework.messaging.SubscribableChannel;
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
 
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
-@ActiveProfiles("int")
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = YuccaLightApplication.class)
-@WebAppConfiguration
-@IntegrationTest("server.port=9000")
-public class GatewayIntegrationA2ATest extends AbstractGatewayIntegrationTest{
+@IntegrationTest({"server.port=9000"})
+public class GatewayIntegrationA2ATest extends AbstractIntegrationTest{
+	
 	
 	@Autowired
 	private YuccaLikeService yuccaLikeService;
 	
+	@Autowired
+    protected JdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	protected JmsTemplate jmsTemplate;
 	
-		
+
 	@Test
 	 public void testSendValidMessage() throws URISyntaxException, InterruptedException {
-		
-		boolean received = false;
+
 		
 		EventMessage msg =  new EventMessage();
 		msg.setApplication(false);
 		msg.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg.setStreamCode("temperature");
-		msg.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"1\" }  } ]");
+		msg.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"1\" }  }")}));
 
 		EventMessage msg1 =  new EventMessage();
 		msg1.setApplication(false);
 		msg1.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg1.setStreamCode("temperature");
-		msg1.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  } ]");
+		msg1.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  }")}));
 
 		EventMessage msg2 =  new EventMessage();
 		msg2.setApplication(false);
 		msg2.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg2.setStreamCode("temperature");
-		msg2.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  } ]");
+		msg2.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  }")}));
 
 		EventMessage msg3 =  new EventMessage();
 		msg3.setApplication(false);
 		msg3.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg3.setStreamCode("temperature");
-		msg3.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  } ]");
+		msg3.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  }")}));
 
+		int numeroTentativi = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
 		
-		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
+		
+		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
+
+		setMockYuccaA2AServiceServer();
 		
 		yuccaLikeService.sendEventToYucca(msg);
 		yuccaLikeService.sendEventToYucca(msg1);
 		yuccaLikeService.sendEventToYucca(msg2);
 		yuccaLikeService.sendEventToYucca(msg3);
-		Thread.sleep(21000);
 
-		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
+		// verify only 2 calls (3 + 1)
+		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-api/stream/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-api/stream/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+
+		Thread.sleep(10000);
+
+		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
+
+		int numeroTentativiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
+
+		IntegrationTestUtils.logQueueLastElement("yucca_light.sent_a2a", jmsTemplate);
 		
 // two group
-		Assert.assertEquals(numeroMessaggiCoda+2, numeroMessaggiCodaDopo);
+		Assert.assertEquals(numeroMessaggiCoda+4, numeroMessaggiCodaDopo);
+		Assert.assertEquals(numeroTentativi+8, numeroTentativiDopo);
+		
+		mockYuccaA2AServiceServer.verify();
     }
 	
 	@Test
 	 public void testTwoStreamSendValidMessage() throws URISyntaxException, InterruptedException {
 		
-		boolean received = false;
+		setMockYuccaA2AServiceServer();
 
 		EventMessage msg1 =  new EventMessage();
 		msg1.setApplication(false);
 		msg1.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg1.setStreamCode("temperature");
-		msg1.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  } ]");
+		msg1.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"2\" }  }")}));
 
 		EventMessage msg2 =  new EventMessage();
 		msg2.setApplication(false);
 		msg2.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg2.setStreamCode("temperature");
-		msg2.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  } ]");
+		msg2.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"3\" }  }")}));
 
 		EventMessage msg3 =  new EventMessage();
 		msg3.setApplication(false);
 		msg3.setSourceCode("550e8400-e29b-41d4-a716-446655440000");
 		msg3.setStreamCode("umidity");
-		msg3.setMeasures("[{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  } ]");
+		msg3.setMeasures(Arrays.asList(new MeasureWithRef[]{new MeasureWithRef("{\"time\": \"2014-05-13T17:08:52.00+02:00\", \"components\": {\"c0\": \"4\" }  }")}));
 		
-		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
-		
+		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
+		int numeroTentativi = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
+
+		yuccaLikeService.sendEventToYucca(msg3);
 		yuccaLikeService.sendEventToYucca(msg1);
 		yuccaLikeService.sendEventToYucca(msg2);
-		yuccaLikeService.sendEventToYucca(msg3);
-		Thread.sleep(21000);
 
-		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light_sent_a2a", jmsTemplate);
+		
+		// verify only 2 calls (1 + 1)
+		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-api/stream/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-api/stream/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+		
+		Thread.sleep(10000);
+		
+//		IntegrationTestUtils.logQueueLastElement("yucca_light.sent_a2a", jmsTemplate);
+		int numeroMessaggiCodaDopo =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
+		int numeroTentativiDopo = JdbcTestUtils.countRowsInTable(jdbcTemplate, "ATTEMPT_HISTORY");
 		
 //two group
-		Assert.assertEquals(numeroMessaggiCoda+2, numeroMessaggiCodaDopo);
-   }
+		Assert.assertEquals(numeroMessaggiCoda+3, numeroMessaggiCodaDopo);
+		Assert.assertEquals(numeroTentativi+6, numeroTentativiDopo);
+//		IntegrationTestUtils.logQueueLastElement("yucca_light.sent_a2a", jmsTemplate);
+		mockYuccaA2AServiceServer.verify();
+}
 
 
 //	@Test

@@ -2,17 +2,21 @@ package org.csi.yucca.gateway.util;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.SimpleTimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.csi.yucca.gateway.api.ParseValidationUtil;
 import org.csi.yucca.gateway.api.dto.Measure;
 import org.csi.yucca.gateway.api.dto.StreamSensorEvent;
 import org.csi.yucca.gateway.integration.dto.EventMessage;
+import org.csi.yucca.gateway.integration.dto.MeasureWithRef;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,21 +29,34 @@ public class Conversion {
 			EventMessage eventMessage = new EventMessage();
 			eventMessage.setSourceCode(eventDto.getSource());
 			eventMessage.setStreamCode(eventDto.getStream());
-			eventMessage.setMeasures(fromMeasureArray2String(eventDto.getValues()));
+			eventMessage.setMeasures(fromMeasureArray2MeasureWithRef(eventDto.getValues()));
 			eventMessage.setApplication(eventDto.getApplication()!=null && eventDto.getApplication().length()>0);
 			return eventMessage;
 		}
 		return null;
 	}
-
-	public static String fromMeasureArray2String(Measure[] values) throws JsonProcessingException {
+	
+	private static List<MeasureWithRef> fromMeasureArray2MeasureWithRef(Measure[] values) throws JsonProcessingException {
+		List<MeasureWithRef> msrWithRef = new ArrayList<>();
 		if (values != null)
 		{
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(values);
-		
-		}
+			for (int i = 0; i < values.length; i++) {
+				msrWithRef.add(new MeasureWithRef(mapper.writeValueAsString(values[i])));
+			}
+			return msrWithRef;
+		}	
 		return null;
+	}
+	
+	public static void addRefToMeasureWithRef(String ref, List<MeasureWithRef> measures)
+	{
+		if (measures!=null)
+		{
+			for (MeasureWithRef measureWithRef : measures) {
+				measureWithRef.setRefId(ref);
+			}
+		}
 	}
 
 	public static Date fromStringToDate(String time) {
