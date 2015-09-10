@@ -4,7 +4,7 @@ Yucca portable gateway
 Yucca-light allows you to easily integrate intelligent objects with a platform yucca (as www.smartdatanet.it ) even when you have network discontinuity
 
 
-![yucca-light architecture](src/site/resource/images/gwiot_arch.png)
+![yucca-light architecture](src/site/resources/images/gwiot_arch.png)
 
 First version of Yucca-Light includes:
 
