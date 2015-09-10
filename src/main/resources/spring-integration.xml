@@ -190,6 +190,7 @@
 	>
 </int-jms:channel>
 
+
 <int-jms:channel  id="sent_a2a" 
 	queue-name="yucca_light.sent_a2a" 
 	connection-factory="jmsConnectionFactory"
