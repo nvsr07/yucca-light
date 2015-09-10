@@ -20,6 +20,7 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.apache.activemq.command.ActiveMQObjectMessage;
@@ -35,8 +36,8 @@ public class QueueController {
 	@Autowired
 	protected JmsTemplate jmsTemplate;
    
-    @RequestMapping(value = "/queue", method = RequestMethod.GET, params = "queueName")
-    public @ResponseBody Map<String,List<Message<EventMessage>>>  queueMessageList(String queueName) {
+    @RequestMapping(value = "/queue", method = RequestMethod.GET)
+    public @ResponseBody Map<String,List<Message<EventMessage>>>  queueMessageList(@RequestParam(value="queueName", required=false, defaultValue="*") String queueName) {
     	
     	Map<String,List<Message<EventMessage>>> events = jmsTemplate.browse("yucca_light."+queueName,new BrowserCallback<Map<String,List<Message<EventMessage>>>>() {
 			@Override
