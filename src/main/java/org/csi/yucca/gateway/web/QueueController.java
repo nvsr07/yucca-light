@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
 
@@ -14,6 +15,7 @@ import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
+import org.springframework.jms.JmsException;
 import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.messaging.Message;
@@ -35,6 +37,9 @@ public class QueueController {
 	
 	@Autowired
 	protected JmsTemplate jmsTemplate;
+	
+	@Autowired
+	protected JmsTemplate jmsTemplateNoWait;
    
     @RequestMapping(value = "/queue", method = RequestMethod.GET)
     public @ResponseBody Map<String,List<Message<EventMessage>>>  queueMessageList(@RequestParam(value="queueName", required=false, defaultValue="*") String queueName) {
@@ -64,6 +69,20 @@ public class QueueController {
 		return events;
     	
     }
+	
+    @RequestMapping(value = "/queue/purge", method = RequestMethod.GET, params = "queueName")
+    public @ResponseBody int  deleteQueueMessage(String queueName) {
+    	int count= 0;
+    	try {
+    		
+			while (jmsTemplateNoWait.receive(queueName)!=null) {
+				count++;
+			}
+		} catch (JmsException e) {
+			return count;
+		}
+    	return count;
+    }
 
     @RequestMapping(value = "/queue/summary", method = RequestMethod.GET, params = "queueName")
     public @ResponseBody Map<String,Map<String,Object>>  queueMessageSummary(String queueName) {
@@ -72,7 +91,6 @@ public class QueueController {
 			@Override
 			public Map<String,Map<String,Object>> doInJms(Session arg0, QueueBrowser queueBrowser) throws JMSException {
 				    Enumeration e = (Enumeration) queueBrowser.getEnumeration();
-	
 				    Map<String,Map<String,Object>>  events = new HashMap();
 		    		Map<String,Object> mappaInterna = null;
 				    while(e.hasMoreElements()) 

@@ -1,3 +1,5 @@
-delete from table EVENTS ;
-delete from table ATTEMPT_HISTORY ;								   
+delete from EVENTS ;
+delete from ATTEMPT_HISTORY ;
+delete from STREAM_METADATA_CONFIGURATION ;								   
+
 commit;

@@ -39,13 +39,13 @@
 </int:header-enricher>
 
 
-<int-http:outbound-gateway
+<int-http:outbound-gateway id="outboundGatewayRealtime"
 	request-channel="sending_rt_progress"
 	reply-channel="nullChannel"
 	http-method="POST"
 	url="${yucca.realtime.http.endpoint}/${yucca.tenant.code}"
 	rest-template="httpRestRTTemplate"
-	reply-timeout="10000"
+	reply-timeout="${yucca.realtime.http.timeout}"
 	expected-response-type="java.lang.String"
 >
 	<int-http:request-handler-advice-chain>
