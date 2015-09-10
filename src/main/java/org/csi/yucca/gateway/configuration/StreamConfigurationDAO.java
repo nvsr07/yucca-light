@@ -94,7 +94,8 @@ public class StreamConfigurationDAO {
 
 		try {
 			List<StreamMetadata> streamMetadata = jdbcTemplate.query(sql, new Object[] { tenantCode, streamCode, virtualentityCode }, new StreamMetadataRowMapper());
-
+			if (streamMetadata == null || streamMetadata.size() == 0)
+				return null;
 			return streamMetadata.get(0);
 		} catch (EmptyResultDataAccessException e) {
 			return null;

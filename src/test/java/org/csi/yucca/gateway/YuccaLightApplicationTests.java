@@ -2,6 +2,7 @@ package org.csi.yucca.gateway;
 
 import org.csi.yucca.gateway.api.InputApiControllerTest;
 import org.csi.yucca.gateway.configuration.LoadConfigurationTest;
+import org.csi.yucca.gateway.configuration.RefreshConfigurationTest;
 import org.csi.yucca.gateway.integration.GatewayIntegrationA2ATest;
 import org.csi.yucca.gateway.integration.GatewayIntegrationDBTest;
 import org.csi.yucca.gateway.integration.GatewayIntegrationJmsTest;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(Suite.class)
 @SuiteClasses({ LoadConfigurationTest.class,
+				RefreshConfigurationTest.class,
 				InputApiControllerTest.class,
 				GatewayIntegrationSuite.class
 })
