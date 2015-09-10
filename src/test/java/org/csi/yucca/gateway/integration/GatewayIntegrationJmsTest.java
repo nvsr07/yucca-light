@@ -25,11 +25,12 @@ public class GatewayIntegrationJmsTest extends AbstractIntegrationTest{
 	
 		
 	@Test
-	 public void testSendValidMessage() throws URISyntaxException, InterruptedException {
+	 public void testSendValidMessage() throws URISyntaxException, InterruptedException, AssertionError {
 		
 		setMockYuccaRTServiceServer();
 		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
 							requestTo("https://yucca-stream/api/input/"+codTenant)).
+//						andExpect(MockRestRequestMatchers.header("Authorization", "Basic dW5pdFRlbmFudDp1bml0VGVuYW50UHdk")).
 						andRespond(MockRestResponseCreators.withSuccess());
 
 
