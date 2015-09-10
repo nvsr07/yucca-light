@@ -13,7 +13,7 @@ public interface YuccaLikeService {
 					  @GatewayHeader(name="errorChannel", value="outputFailureYuccaChannel"),
 					  @GatewayHeader(name="gwStatus", value="GW_RECEIVED")
 					 },
-			requestChannel="yuccaLikeRtChannel", replyTimeout=20, replyChannel="outputYuccaChannel")
+			requestChannel="yuccaLikeRtChannel", replyTimeout=20)
 	public void sendEventToYucca(EventMessage message);
 
 	
