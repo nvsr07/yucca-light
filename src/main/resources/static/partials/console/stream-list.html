@@ -1,5 +1,13 @@
-<div >
+<div ng-controller='StreamMetadataController'>
 	<div class='panel'>
-	Stream
+		<div class="container">
+			<div class="list-group">
+				<div class="list-group-item">
+					<div ng-repeat="streamMetadata in streamMetadataList ">
+						{{streamMetadata.streamCode}}
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
