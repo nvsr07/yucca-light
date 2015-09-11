@@ -53,6 +53,8 @@ public class StreamConfiguration {
 		if (getStreams().getStream() == null)
 			getStreams().setStream(new Stream());
 
+		String virtualEntityTYpe = getStreams().getStream().getVirtualEntityType().equalsIgnoreCase("Application") ? "application" : "sensor";
+
 		String jsonSchema = "{";
 		jsonSchema += "\"title\": \"" + getStreamCode() + " sensor schema\",";
 		jsonSchema += "\"type\": \"object\",";
@@ -60,7 +62,7 @@ public class StreamConfiguration {
 		jsonSchema += "\"stream\": {";
 		jsonSchema += "\"type\": \"string\"";
 		jsonSchema += "},";
-		jsonSchema += "\"" + getStreams().getStream().getVirtualEntityType() + "\": {";
+		jsonSchema += "\"" + virtualEntityTYpe + "\": {";
 		jsonSchema += "\"type\": \"string\"";
 		jsonSchema += "},";
 		jsonSchema += "\"values\": {";
@@ -84,19 +86,29 @@ public class StreamConfiguration {
 				counter++;
 				String separator = counter < size ? "," : "";
 				jsonSchema += "\"" + component.getComponentName() + "\" : {";
-				jsonSchema += "\"type\" : \"" + component.getDataType() + "\"";
+
+				if ("float".equals(component.getDataType()) || "double".equals(component.getDataType()) || "longitude".equals(component.getDataType())
+						|| "latitude".equals(component.getDataType())) {
+					jsonSchema += "\"type\" : \"number\"";
+				} else if ("int".equals(component.getDataType())|| "long".equals(component.getDataType()) ) {
+					jsonSchema += "\"type\" : \"integer\""; // FIXME gestire long
+				} else if ("dateTime".equals(component.getDataType())) {
+					jsonSchema += "\"type\" : \"string\",  \"format\": \"date-time\"";
+				} else
+					jsonSchema += "\"type\" : \"" + component.getDataType() + "\"";
+
 				jsonSchema += "}" + separator;
-				requredComponentName += component.getComponentName() + separator;
+				requredComponentName += "\"" + component.getComponentName() + "\"" + separator;
 			}
 		}
 		jsonSchema += "},";
-		jsonSchema += "\"required\": [\"" + requredComponentName + "\"]";
+		jsonSchema += "\"required\": [" + requredComponentName + "]";
 		jsonSchema += "}";
 		jsonSchema += "}";
 		jsonSchema += "}";
 		jsonSchema += "}";
 		jsonSchema += "},";
-		jsonSchema += "\"required\": [\"stream\", \"" + getStreams().getStream().getVirtualEntityType() + "\", \"values\"]";
+		jsonSchema += "\"required\": [\"stream\", \"" + virtualEntityTYpe + "\", \"values\"]";
 		jsonSchema += "}";
 		// https://github.com/csipiemonte/yucca-realtime/blob/master/stream_template_cepartifacts/cepconfig/src/main/esbconfig/api__deploy__tenant__sensor__stream__addTextResource.xml
 		return jsonSchema;
