@@ -41,4 +41,12 @@ public class GatewayConfigurationConfig {
 	StreamConfigurationDAO streamConfigurationDAO(){
 		return new StreamConfigurationDAO();
 	}
+	
+	@Bean
+	@Autowired
+	ApplicationStartedEventHolderBean applicationStartedEventHolderBean(){
+		return new ApplicationStartedEventHolderBean();
+	}
+	
+	
 }
