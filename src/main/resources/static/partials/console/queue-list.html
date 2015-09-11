@@ -1,0 +1,43 @@
+<div ng-controller="QueueController" class='panel'>
+	<div class="row">
+		<br />
+		<div class="container">
+			<div id="userList" class="col-sm-offset-1 col-sm-10">
+				<div class="input-group">
+					<input class="form-control" id="search" name="search"
+						placeholder="Search for" ng-model="query" required="required" />
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-default">
+							<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</span>
+				</div>
+				<div class="list-group">
+					<div class="list-group-item">
+						<div ng-repeat="(curcodaKey,curcodaVal) in events "
+							class="list-group-item" style="margin-top: 16px">
+							<div class="row-content">
+								<h4 class="list-group-item-heading">coda: {{curcodaKey}}</h4>
+
+								<div ng-repeat="evt in curcodaVal " class="list-group-item"
+									style="margin-top: 16px">
+									<div class="row-content">
+										sensor {{evt.payload.sourceCode}}<br /> stream
+										{{evt.payload.streamCode}}<br /> headers.gwId
+										{{evt.headers.gwId}}<br /> headers.gwStatus
+										{{evt.headers.gwStatus}}<br /> headers.gwAttemptResponse
+										{{evt.headers.gwAttemptResponse}}<br />
+
+									</div>
+								</div>
+
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

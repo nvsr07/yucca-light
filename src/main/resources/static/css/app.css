@@ -1,0 +1,35 @@
+@import url(//fonts.googleapis.com/css?family=Aldrich);
+@import url(//fonts.googleapis.com/css?family=Ubuntu);
+body{font-family: 'Ubuntu', sans-serif;}
+h1, h2 {font-family: 'Aldrich', sans-serif;}
+a{color: black; text-decoration: underline;}
+
+
+
+.main-body{/*background-color: #efefef; */border-bottom: solid 1px #bbb;}
+
+/* logo */
+
+.logo{letter-spacing: 2px;}
+.logo-text-smart{color: #707c7c;}
+.logo-text-data{color: #00963d;}
+.logo-text-net{color: #707c7c;}
+
+.menu-flag-icon{display: inline-block; height: 50px; width: 40px;}
+.menu-flag-icon-en{background: url("../img/flags/en.png") center center no-repeat; }
+.menu-flag-icon-it{background: url("../img/flags/it.png") center center no-repeat; }
+
+.top-header {height: 80px;}
+.top-header h1{font-size: 24pt; text-align: center;}
+
+footer{text-align: center;   width: 100%; height: auto;  background-color:#fff; padding-top: 4em;}
+footer ul {list-style-type: none;}
+footer ul li { display:inline; text-align: center;}
+footer ul li + li::before  { content: "|"; padding: 0 .5em; }
+footer ul li a{display: block;}
+footer ul li img{ margin-bottom: .5em;}
+footer div{text-align: center;}
+footer img{ margin-bottom: 1em;}
+footer .last-row{padding: 2em; margin: 2em; text-align: center; border-top: solid 1px #b4b4b4;}
+footer .footer-separator{color: #b4b4b4; padding: 0 2em; }
+
