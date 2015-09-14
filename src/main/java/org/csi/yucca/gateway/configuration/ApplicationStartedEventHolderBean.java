@@ -3,6 +3,7 @@ package org.csi.yucca.gateway.configuration;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +14,18 @@ public class ApplicationStartedEventHolderBean {
 	@Autowired
 	private StreamConfigurationManager streamConfigurationManager;
 	
-	
+	@Value("${yucca.metadata.refresh.onStartup}")
+	private boolean refreshOnStartup;
+
+
     public Boolean getEventFired() {
         return eventFired;
     }
  
     public void setEventFired(Boolean eventFired) {
-		streamConfigurationManager.refreshConfiguration();
+    	
+    	if (refreshOnStartup)
+    		streamConfigurationManager.refreshConfiguration();
     	
         this.eventFired = eventFired;
     }
