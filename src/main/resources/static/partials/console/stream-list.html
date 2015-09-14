@@ -10,15 +10,12 @@
 						<div class="pull-right">
 							<form class="form-inline" role="form">
 								<div class="form-group">
-									<input type="text" class="form-control col-xs-2" ng-model="statusFilter" placeholder="{{'STREAM_LIST_STATUS_FILTER'|translate}}" />
-								</div>
-								<div class="form-group">
 									<input type="text" class="form-control col-xs-2" ng-model="codeFilter" placeholder="{{'STREAM_LIST_CODE_FILTER'|translate}}" />
 								</div>
 							</form>
 						</div>
 					</div>
-					<div class="table-responsive dashboard-streamList-table">
+					<div class="table-responsive console-streamList-table">
 						<table class="table">
 							<thead>
 								<tr>
@@ -42,10 +39,11 @@
 									
 									</th>
 									<th>
-										<a href="" ng-click="predicate = 'deploymentStatusCode'; reverse=!reverse"><span translate>STREAM_STATUS</span> 
+										<a href="" ng-click="predicate = 'deploymentStatusCode'; reverse=!reverse"><span translate>STREAM_CONFIG_LASTUPDATE</span> 
 										<span ng-show="predicate=='deploymentStatusCode' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
 										<span ng-show="predicate=='deploymentStatusCode' && reverse" class="glyphicon glyphicon-chevron-down small"></span></a>
 									</th>
+									<th>&nbsp;</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -58,7 +56,7 @@
 									</td>
 								</tr>
 								
-								<tr ng-repeat="stream in filteredStreamsList = (streamMetadataList	 | filter: searchCodeFilter | filter: searchStatusFilter|  orderBy:predicate:reverse )|startFrom:(currentPage-1)*pageSize | limitTo:pageSize  ">
+								<tr ng-repeat-start="stream in filteredStreamsList = (streamMetadataList	 | filter: searchCodeFilter |  orderBy:predicate:reverse )|startFrom:(currentPage-1)*pageSize | limitTo:pageSize  ">
 									<td class='text-left'>
 										<a href="#/dashboard/stream/{{stream.codiceTenant}}/{{stream.codiceVirtualEntity}}/{{stream.codiceStream}}">
 											<img ng-src="{{stream.streamIcon}}" alt="logo stream" class='list-entity-icon-preview-img' >
@@ -67,7 +65,48 @@
 									</td>
 									<td><small>{{stream.streams.stream.virtualEntityCode}}</small></td>
 									<td>{{stream.streams.stream.deploymentVersion}}</td>
-									<td class='text-left'><span ng-bind-html="stream.statusIcon"></span> {{stream.deploymentStatusCode|translate}}</td>
+									<td class='text-left'>{{stream.lastUpdateTimestamp|date}}</td>
+									<td>
+										<i ng-click='stream.showDetail = true' ng-show='!stream.showDetail' class="glyphicon  glyphicon-chevron-right"></i>
+										<i ng-click='stream.showDetail = false' ng-show='stream.showDetail' class="glyphicon glyphicon-chevron-down"></i>
+									</td>
+								</tr>
+								<tr ng-repeat-end  ng-show='stream.showDetail' class=''>
+									<td colspan='2' class='table-td-no-border-top' >	
+										<div class='components-panel'>
+											<h4><span translate>COMPONENTS</span></h4>
+											<table class='table table-condensed'>
+												<thead>
+													<tr>
+														<th translate>STREAM_COMPONENT_NAME</th>
+														<th translate>STREAM_COMPONENT_ALIAS</th>
+														<th translate>STREAM_COMPONENT_TOLERANCE</th>
+														<th translate>STREAM_COMPONENT_MEASUREUNIT</th>
+														<th translate>STREAM_COMPONENT_PHENOMENON</th>
+														<th translate>STREAM_COMPONENT_DATATYPE</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat='component in stream.streams.stream.components.element'>
+														<td>{{component.componentName}}</td>
+														<td>{{component.componentAlias}}</td>
+														<td>{{component.tolerance}}</td>
+														<td>{{component.measureUnitCategory}} - {{component.measureUnit}}</td>
+														<td>{{component.phenomenonCategory}} - {{component.phenomenon}}</td>
+														<td>{{component.dataType}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</td>			
+									<td colspan='3' class='table-td-no-border-top'>	
+										<div>
+											<h4><span translate>STREAM_MESSAGE_EXAMPLE_TITLE</span></h4>
+											<p>
+												<small><pre pretty-json="stream.exampleMessage"/></small>
+											</p>
+										</div>
+									</td>													
 								</tr>
 							</tbody>
 						</table>

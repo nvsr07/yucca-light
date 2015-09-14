@@ -11,7 +11,6 @@ appControllers.controller('StreamMetadataController', [
 
 			$scope.filteredStreamsList = [];
 			$scope.codeFilter = null;
-			$scope.statusFilter = null;
 			$scope.currentPage = 1;
 			$scope.pageSize = 10;
 			$scope.totalItems = $scope.streamMetadataList.length;
@@ -25,19 +24,6 @@ appControllers.controller('StreamMetadataController', [
 			};
 
 			$scope.$watch('codeFilter', function(newCode) {
-				$scope.currentPage = 1;
-				$scope.totalItems = $scope.filteredStreamsList.length;
-			});
-
-			$scope.searchStatusFilter = function(stream) {
-				var keyword = new RegExp($scope.statusFilter, 'i');
-				console.log("searchStatusFilter", keyword, stream);
-				return !$scope.statusFilter
-						|| keyword.test(stream.deploymentStatusDesc)
-						|| keyword.test(stream.deploymentStatusCodeTranslated);
-			};
-
-			$scope.$watch('statusFilter', function(newStatus) {
 				$scope.currentPage = 1;
 				$scope.totalItems = $scope.filteredStreamsList.length;
 			});

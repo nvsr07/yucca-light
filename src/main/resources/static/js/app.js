@@ -5,7 +5,8 @@ var app = angular.module('yuccalight', [
   'yuccalight.directives',
   'yuccalight.controllers',
   'pascalprecht.translate',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ngPrettyJson'
 ]);
 
 app.config(['$translateProvider', function ($translateProvider) {
