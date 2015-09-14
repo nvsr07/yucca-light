@@ -22,6 +22,9 @@ a{color: black; text-decoration: underline;}
 .top-header {height: 80px;}
 .top-header h1{font-size: 24pt; text-align: center;}
 
+
+.list-entity-icon-preview-img {width: 48px; height: 48px; margin-right: 1em;}
+
 footer{text-align: center;   width: 100%; height: auto;  background-color:#fff; padding-top: 4em;}
 footer ul {list-style-type: none;}
 footer ul li { display:inline; text-align: center;}
