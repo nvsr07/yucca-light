@@ -2,6 +2,8 @@ package org.csi.yucca.gateway.configuration;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.csi.yucca.gateway.configuration.dto.StreamConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,6 +26,8 @@ public class StreamConfigurationManager {
 	// public static final String STREAM_CONFIGURATION_URL =
 	// "secure/proxy/management/stream/metadata?consumerType=yuccaLight&tenant=";
 
+	Logger logger = Logger.getLogger("StreamConfigurationManager");
+	
 	private String baseUrl;
 
 	private String codTenant;
@@ -40,7 +45,8 @@ public class StreamConfigurationManager {
 
 	public void refreshConfiguration() {
 		String configJson = loadConfiguration();
-		saveConfiguration(configJson);
+		if (configJson!=null)
+			saveConfiguration(configJson);
 	}
 
 	public String loadConfiguration() {
@@ -53,10 +59,16 @@ public class StreamConfigurationManager {
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		HttpEntity<String> response = metadataRestTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		String streamJson = response.getBody();
-		System.out.println(streamJson);
-		return streamJson;
+		HttpEntity<String> response;
+		try {
+			response = metadataRestTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			String streamJson = response.getBody();
+			logger.fine("loadConfiguration:["+streamJson+"]");
+			return streamJson;
+		} catch (RestClientException e) {
+			logger.log(Level.SEVERE,"Error in loadConfiguration",e);
+			return null;
+		}
 	}
 
 	public void saveConfiguration(String streamJson) {
@@ -80,32 +92,13 @@ public class StreamConfigurationManager {
 				}
 			}
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(Level.SEVERE,"Error in saveConfiguration",e);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(Level.SEVERE,"Error in saveConfiguration",e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(Level.SEVERE,"Error in saveConfiguration",e);
 		}
 
 	}
 
-	// public static void main(String[] args) {
-	//
-	// String jsonS =
-	// "[{\"streamCode\":\"MultiTenantStr\",\"streamName\":\"ale\",\"configData\":{\"tenantCode\":\"sandbox\"},\"streams\":{\"stream\":{\"virtualEntityName\":\"ProvaDue\",\"virtualEntityDescription\":\"Descrizione
-	// MultiTenantStr\",\"virtualEntityCode\":\"3e81f75f-aee6-4ac0-c4c3-e6a6dd0e7547\",\"virtualEntityType\":\"Device\",\"virtualEntityCategory\":\"Smart\",\"domainStream\":\"ENVIRONMENT\",\"visibility\":\"private\",\"deploymentVersion\":1,\"streamIcon\":\"img/stream-icon-default.png\",\"components\":{\"element\":"
-	// +
-	// "[{\"componentName\":\"wins\",\"componentAlias\":\"wins\",\"tolerance\":12,\"measureUnit\":\"lux\",\"measureUnitCategory\":\"lightning\",\"phenomenon\":\"air
-	// temperature\",\"phenomenonCategory\":\"environment\",\"dataType\":\"float\"},"
-	// +
-	// "{\"componentName\":\"secondo\",\"componentAlias\":\"wins\",\"tolerance\":12,\"measureUnit\":\"lux\",\"measureUnitCategory\":\"lightning\",\"phenomenon\":\"air
-	// temperature\",\"phenomenonCategory\":\"environment\",\"dataType\":\"string\"}"
-	// + "]},\"streamTags\":{\"tags\":[
-	// ]},\"virtualEntityPositions\":{\"position\":[{\"lon\":0,\"lat\":0,\"elevation\":0,\"floor\":0,\"room\":\"0\"}]}}}}]";
-	//
-	// new StreamConfigurationManager().saveConfiguration(jsonS);
-	// }
 }
