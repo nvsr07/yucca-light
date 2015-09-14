@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans
+xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
@@ -18,7 +19,8 @@
   http://www.springframework.org/schema/integration/jms
   http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
   http://www.springframework.org/schema/util
-  http://www.springframework.org/schema/util/spring-util.xsd">
+  http://www.springframework.org/schema/util/spring-util.xsd
+  http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
 
 <beans:import resource="spring-integration-database.xml"/>
@@ -26,7 +28,7 @@
 <beans:import resource="spring-integration-log.xml"/>
 <beans:import resource="spring-integration-a2a.xml"/>
 
-
+<task:annotation-driven />
 	<!-- general bean -->
 <beans:bean name="httpRestRTTemplate" class="org.springframework.boot.test.TestRestTemplate">
  	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
