@@ -8,6 +8,13 @@ var app = angular.module('yuccalight', [
   'ui.bootstrap'
 ]);
 
+app.config(['$translateProvider', function ($translateProvider) {
+	// add translation table
+	$translateProvider
+	.translations('en', translations_en)
+	.translations('it', translations_it)
+	.preferredLanguage('it');
+}]);
 
 
 
