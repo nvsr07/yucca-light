@@ -7,5 +7,6 @@ public enum HeaderNameEnum {
 	gwTimestamp,
 	gwAttemptId,
 	gwAttemptResponse,
-	gwAttemptResponseDetail
+	gwAttemptResponseDetail,
+	gwAttemptEndpoint
 }

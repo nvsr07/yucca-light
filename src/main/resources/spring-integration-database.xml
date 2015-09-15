@@ -28,7 +28,7 @@
 <!-- <int:logging-channel-adapter channel="toAddAttemptChannel" log-full-message="true" logger-name="toAddAttemptChannel"></int:logging-channel-adapter>  -->
 <int-jdbc:outbound-channel-adapter data-source="dataSource"   channel="toAddAttemptChannel"
 	query="INSERT INTO  ATTEMPT_HISTORY (GW_ID , ATTEMPT_ID, ATTEMPT_SEND_TIMESTAMP , ATTEMPT_RECEIVE_TIMESTAMP ,RESPONSE, ENDPOINT, FROM_STATUS, TO_STATUS ) 
-			VALUES (:headers[gwId],:headers[gwAttemptId], :headers[timestamp], null, null, 'RT_ENDPOINT' ,:headers[gwStatus] , null)" />
+			VALUES (:headers[gwId],:headers[gwAttemptId], :headers[timestamp], null, null, :headers[gwAttemptEndpoint] ,:headers[gwStatus] , null)" />
 
 <int:publish-subscribe-channel id="toUpdateAttemptChannel"></int:publish-subscribe-channel>
 <!-- <int:logging-channel-adapter channel="toUpdateAttemptChannel" log-full-message="true" logger-name="toUpdateAttemptChannel"></int:logging-channel-adapter> -->

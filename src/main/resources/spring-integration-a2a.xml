@@ -48,6 +48,8 @@
 <int:header-enricher input-channel="sending_failed" output-channel="sending_a2a_progress" >
 	<int:header name="gwStatus" value="SENDING_A2A_PROGRESS" overwrite="true"/>
 	<int:header name="gwAttemptId" expression="headers.id" overwrite="true"/>
+	<int:header name="Content-type" value="application/json" overwrite="true"/>
+	<int:header name="gwAttemptEndpoint" value="A2A_ENDPOINT" overwrite="true"/>
 	<int:poller ref="a2aPoller"></int:poller>
 </int:header-enricher>
 

@@ -88,14 +88,15 @@ public class StreamConfigurationManager {
 
 					streamConfigurationDAO.saveStreamMetadataConfiguration(streamConfiguration, streamJson);
 
-					System.out.println(streamConfiguration.getJSonSchema());
+					//System.out.println(streamConfiguration.getJSonSchema());
 				}
+				logger.log(Level.INFO,"Stream list configuration updated from yucca!");
 			}
 		} catch (JsonParseException e) {
 			logger.log(Level.SEVERE,"Error in saveConfiguration",e);
 		} catch (JsonMappingException e) {
 			logger.log(Level.SEVERE,"Error in saveConfiguration",e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.log(Level.SEVERE,"Error in saveConfiguration",e);
 		}
 

@@ -187,6 +187,12 @@
 		    <groupId>org.webjars.bower</groupId>
 		    <artifactId>ng-prettyjson</artifactId>
 		    <version>0.1.8</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<artifactId>angular</artifactId>
+		    		<groupId>org.webjars.bower</groupId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

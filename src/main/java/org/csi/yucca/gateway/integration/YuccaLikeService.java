@@ -9,8 +9,7 @@ import org.springframework.messaging.handler.annotation.Header;
 @MessagingGateway(name="yuccaLikeGateway")
 public interface YuccaLikeService {
 
-	@Gateway(headers={@GatewayHeader(name="Content-Type", value="application/json"),
-					  @GatewayHeader(name="errorChannel", value="outputFailureYuccaChannel"),
+	@Gateway(headers={@GatewayHeader(name="errorChannel", value="outputFailureYuccaChannel"),
 					  @GatewayHeader(name="gwStatus", value="GW_RECEIVED")
 					 },
 			requestChannel="yuccaLikeRtChannel", replyTimeout=20)
