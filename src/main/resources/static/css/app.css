@@ -26,7 +26,8 @@ a{color: black; text-decoration: underline;}
 .list-entity-icon-preview-img {width: 32px; height: 32px; margin-right: 1em;}
 .console-streamList-table{}
 .table-td-no-border-top{border-top: none!important;}
-.components-panel{margin-left: 1em; padding-left: 1em; border-left: solid 1px gray;}
+.components-panel{margin-left: 1em; padding-left: 1em;}
+.stream-old-version{background-color: #f9f9f9; color: #a9a9a9;}
 
 footer{text-align: center;   width: 100%; height: auto;  background-color:#fff; padding-top: 4em;}
 footer ul {list-style-type: none;}

@@ -56,9 +56,9 @@
 									</td>
 								</tr>
 								
-								<tr ng-repeat-start="stream in filteredStreamsList = (streamMetadataList	 | filter: searchCodeFilter |  orderBy:predicate:reverse )|startFrom:(currentPage-1)*pageSize | limitTo:pageSize  ">
+								<tr  class='{{stream.rowStyle}}' ng-repeat-start="stream in filteredStreamsList = (streamMetadataList	 | filter: searchCodeFilter |  orderBy:predicate:reverse )|startFrom:(currentPage-1)*pageSize | limitTo:pageSize  ">
 									<td class='text-left'>
-										<a href="#/dashboard/stream/{{stream.codiceTenant}}/{{stream.codiceVirtualEntity}}/{{stream.codiceStream}}">
+										<a href ng-click="stream.showDetail = !stream.showDetail">
 											<img ng-src="{{stream.streamIcon}}" alt="logo stream" class='list-entity-icon-preview-img' >
 											<strong>{{stream.streamCode}}</strong> - {{stream.streamName}}
 										</a>
@@ -71,13 +71,13 @@
 										<i ng-click='stream.showDetail = false' ng-show='stream.showDetail' class="glyphicon glyphicon-chevron-down"></i>
 									</td>
 								</tr>
-								<tr ng-repeat-end  ng-show='stream.showDetail' class=''>
+								<tr  class='{{stream.rowStyle}}'  ng-repeat-end  ng-show='stream.showDetail' class=''>
 									<td colspan='2' class='table-td-no-border-top' >	
 										<div class='components-panel'>
 											<h4><span translate>COMPONENTS</span></h4>
 											<table class='table table-condensed'>
 												<thead>
-													<tr>
+													<tr class='{{stream.rowStyle}}'>
 														<th translate>STREAM_COMPONENT_NAME</th>
 														<th translate>STREAM_COMPONENT_ALIAS</th>
 														<th translate>STREAM_COMPONENT_TOLERANCE</th>
@@ -87,7 +87,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													<tr ng-repeat='component in stream.streams.stream.components.element'>
+													<tr ng-repeat='component in stream.streams.stream.components.element' class='{{stream.rowStyle}}'>
 														<td>{{component.componentName}}</td>
 														<td>{{component.componentAlias}}</td>
 														<td>{{component.tolerance}}</td>

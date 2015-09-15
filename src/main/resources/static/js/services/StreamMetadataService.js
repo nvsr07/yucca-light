@@ -12,13 +12,24 @@ appServices.factory('StreamMetadataService', function($log, $resource) {
             	    if(data!=null){
                 		var streamMetadataCompleteList = JSON.parse(data);
                 		for (var i = 0; i < streamMetadataCompleteList.length; i++) {
-                			var streamMetadataComplete = streamMetadataCompleteList[i]
+                			var streamMetadataComplete = streamMetadataCompleteList[i];
             			    var streamMetadata = JSON.parse(streamMetadataComplete.metadataJson);
             			    if(streamMetadata.streamIcon || streamMetadata.streamIcon == null)
             			    	streamMetadata.streamIcon  = "img/stream-icon-default.png";
             
             			    streamMetadata.lastUpdateTimestamp = streamMetadataComplete.lastUpdateTimestamp;
 
+            			    
+            			    // check if is an old version
+            			    for (var k = 0; k < streamMetadataCompleteList.length; k++) {
+								var s = streamMetadataCompleteList[k];
+								if(s.streamCode == streamMetadataComplete.streamCode &&  s.virtualEntityCode == streamMetadataComplete.virtualEntityCode && s.deploymentVersion > streamMetadataComplete.deploymentVersion){
+									streamMetadata.rowStyle = 'stream-old-version';
+									break;
+								}
+								
+							}
+            			    
             			    var exampleMessage = "{\"stream\": \""+streamMetadataComplete.streamCode+"\",\n";
             			    exampleMessage += "  \"sensor\": \"" + streamMetadataComplete.virtualEntityCode+ "\",\n";
             			    exampleMessage += "  \"values\":\n";
