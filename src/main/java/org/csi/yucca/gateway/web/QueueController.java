@@ -96,8 +96,6 @@ public class QueueController {
     	try {
 			jmsTemplate.send("yucca_light."+queueDestination, new CloneMessageCreator(msd));
 		} catch (JmsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
     	return true;
 
