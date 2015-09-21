@@ -16,7 +16,7 @@ import org.springframework.jms.core.JmsTemplate;
 @IntegrationComponentScan("org.csi.yucca.gateway.integration")
 @EnableIntegration
 @EnableJms
-@ImportResource("spring-integration.xml")
+@ImportResource("classpath*:/spring-integration.xml")
 public class InfrastructureConfiguration {
 
 	@Bean

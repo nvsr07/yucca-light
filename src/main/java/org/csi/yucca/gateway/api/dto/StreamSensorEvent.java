@@ -1,8 +1,5 @@
 package org.csi.yucca.gateway.api.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.Response;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -14,14 +11,6 @@ public class StreamSensorEvent  {
 	private String sensor;
 	
 	private Measure[] values;
-	
-	
-	protected Response error(String input, Exception e) {
-	    return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-	                   .entity(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
-	                   .build();
-	}
-	
 	
 	
 	public String getStream() {

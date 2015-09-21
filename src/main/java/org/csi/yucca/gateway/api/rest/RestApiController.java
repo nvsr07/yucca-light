@@ -1,25 +1,37 @@
 package org.csi.yucca.gateway.api.rest;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
+import javax.servlet.http.HttpServletRequest;
 
 import org.csi.yucca.gateway.api.InputManager;
+import org.csi.yucca.gateway.api.dto.ErrorOnInbound;
 import org.csi.yucca.gateway.api.dto.StreamSensorEvent;
 import org.csi.yucca.gateway.configuration.StreamConfigurationDAO;
 import org.csi.yucca.gateway.exception.InsertApiBaseException;
 import org.csi.yucca.gateway.integration.YuccaLikeService;
 import org.csi.yucca.gateway.util.Conversion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 
-@Path("/input/{tenant}")
+@RestController
+@Scope("request")
+@RequestMapping(value = "/api")
 public class RestApiController {
 
 	Logger logger = Logger.getLogger("RestApiController");
@@ -29,11 +41,19 @@ public class RestApiController {
 
 	@Autowired
 	private StreamConfigurationDAO streamConfigurationDAO;
+
 	
-	@POST
-	@Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-	public Response receive(@PathParam("tenant") String tenant,JsonNode event) throws InsertApiBaseException {
-		StreamSensorEvent eventDto =InputManager.validate(tenant,event, streamConfigurationDAO);
+	
+	@RequestMapping(value = "/input/{tenant}")
+	public ResponseEntity receive(@PathVariable(value = "tenant") String tenant,
+			@RequestBody String  eventStr) throws InsertApiBaseException, JsonProcessingException,IOException  {
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		
+		JsonNode event = mapper.readTree(eventStr);		
+		
+		StreamSensorEvent eventDto =InputManager.validate(tenant, event, streamConfigurationDAO);
 		if (tenant.equals("exp"))
 			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_STREAM_NOT_FOUND,"prova");
 
@@ -44,16 +64,8 @@ public class RestApiController {
 			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_INPUT_INVALID_DATA_VALUE,e.getMessage());
 		}
 				
-//		MessagingTemplate msgTemplate = new MessagingTemplate();
-//		Message<StreamSensorEvent> msgEventDto = new GenericMessage<StreamSensorEvent>(eventDto);
-//		Message reply = msgTemplate.sendAndReceive("requestChannel",msgEventDto);
 		
-		
-		
-		// if fail --> Store for task
-		
-		
-		return Response.accepted().build();
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
 	
 
@@ -61,4 +73,37 @@ public class RestApiController {
 	{
 		this.yuccaLikeService = service;
 	}
+
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(InsertApiBaseException.class)
+	@ResponseBody ErrorOnInbound handleBadRequest(HttpServletRequest req, InsertApiBaseException e) {
+		ErrorOnInbound errorOnInbound = new ErrorOnInbound();
+		errorOnInbound.setError_code(e.getErrorCode());
+		errorOnInbound.setError_name(e.getErrorName());
+		errorOnInbound.setMessage(e.getMessage());
+		return errorOnInbound;
+	} 
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(JsonProcessingException.class)
+	@ResponseBody ErrorOnInbound handleJsonProcessingException(HttpServletRequest req, JsonProcessingException e) {
+		ErrorOnInbound errorOnInbound = new ErrorOnInbound();
+		errorOnInbound.setError_code("E012");
+		errorOnInbound.setError_name("Json validation failed");
+				// TODO inserire messaggio originale se possibile
+		return errorOnInbound;
+	} 
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(PropertyBindingException.class)
+	@ResponseBody ErrorOnInbound handleJsonProcessingException(HttpServletRequest req, PropertyBindingException e) {
+		ErrorOnInbound errorOnInbound = new ErrorOnInbound();
+		errorOnInbound.setError_code("E012");
+		errorOnInbound.setError_name("Json validation failed");
+				// TODO inserire messaggio originale se possibile
+		return errorOnInbound;
+	} 
+
+
 }
