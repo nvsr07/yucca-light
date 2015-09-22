@@ -30,8 +30,7 @@ public class ApplicationStartedEventListener implements ApplicationListener{
 		
 		System.out.println("event +++++"  + applicationStartedEvent.toString());
 		 if (applicationStartedEvent instanceof ContextRefreshedEvent) {
-			System.out.println("Context Event Received ----------------------------------------------------------------------");
-			this.eventHolderBean.setEventFired(true);
+			this.eventHolderBean.setEventFired((ContextRefreshedEvent)applicationStartedEvent,true);
 		 }
 	}	
 

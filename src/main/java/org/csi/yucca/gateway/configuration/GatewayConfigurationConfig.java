@@ -10,30 +10,20 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class GatewayConfigurationConfig {
 
-
-	@Value("${yucca.metadata.http.baseurl}")
-	private String baseUrl;
-
-	@Value("${yucca.tenant.code}")
-	private String codTenant;
-
-	@Value("${yucca.tenant.username}")
-	private String username;
-
-	@Value("${yucca.tenant.password}")
-	private String password;
-
+	@Autowired
+	private YuccaSettings yuccaSettings;
+	
 	@Bean
 	@Autowired
 	RestTemplate metadataRestTemplate() {
-		return  new TestRestTemplate(username, password);
+		return  new TestRestTemplate(yuccaSettings.getTenant().getUsername(), yuccaSettings.getTenant().getPassword());
 	}
 	
 	
 	@Bean
 	@Autowired
 	StreamConfigurationManager streamConfigurationManager() {
-		return new StreamConfigurationManager(baseUrl, codTenant);
+		return new StreamConfigurationManager(yuccaSettings.getMetadata().getHttpEndpoint(), yuccaSettings.getTenant().getCode());
 	}
 
 	@Bean

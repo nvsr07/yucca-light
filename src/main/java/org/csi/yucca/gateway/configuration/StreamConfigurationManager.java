@@ -55,17 +55,20 @@ public class StreamConfigurationManager {
 		headers.set("Accept", "application/json");
 
 		String streamMetadataUrl = baseUrl + "/management/stream/metadata";
+		try {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(streamMetadataUrl).queryParam("tenant", codTenant).queryParam("consumerType", "yuccaLight");
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		HttpEntity<String> response;
-		try {
 			response = metadataRestTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 			String streamJson = response.getBody();
 			logger.fine("loadConfiguration:["+streamJson+"]");
 			return streamJson;
 		} catch (RestClientException e) {
+			logger.log(Level.SEVERE,"Error in loadConfiguration",e);
+			return null;
+		} catch (Exception e) {
 			logger.log(Level.SEVERE,"Error in loadConfiguration",e);
 			return null;
 		}

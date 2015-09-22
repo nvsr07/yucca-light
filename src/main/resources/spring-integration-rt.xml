@@ -21,7 +21,7 @@
   http://www.springframework.org/schema/util/spring-util.xsd">
 
 
-<int:chain input-channel="yuccaLikeRtChannel" >
+<int:chain input-channel="yuccaLikeRtChannel" id="yuccaLikeRtChannelChain">
 	<int:header-enricher >
 		<int:header name="gwId" expression="headers.id" overwrite="true"/>
 		<int:header name="gwTimestamp" expression="headers.timestamp" overwrite="true"/>
@@ -45,9 +45,9 @@
 	request-channel="sending_rt_progress"
 	reply-channel="nullChannel"
 	http-method="POST"
-	url="${yucca.realtime.http.endpoint}/${yucca.tenant.code}"
+	url="${yucca.realtime.httpEndpoint}/${yucca.tenant.code}"
 	rest-template="httpRestRTTemplate"
-	reply-timeout="${yucca.realtime.http.timeout}"
+	reply-timeout="${yucca.realtime.httpTimeout}"
 	expected-response-type="java.lang.String"
 >
 	<int-http:request-handler-advice-chain>

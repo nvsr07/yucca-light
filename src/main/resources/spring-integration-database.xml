@@ -17,7 +17,7 @@
 <!-- message store outbound channels -->
 <int:publish-subscribe-channel  id="toInsertChannel"/>
 <!-- int:logging-channel-adapter channel="toInsertChannel" log-full-message="true" logger-name="toInsertChannel"></int:logging-channel-adapter>  -->
-	<int:chain input-channel="toInsertChannel">
+	<int:chain input-channel="toInsertChannel" id="toInsertChain">
 	<int:object-to-map-transformer />
 	<int-jdbc:outbound-channel-adapter data-source="dataSource" 
 		query="INSERT INTO  EVENTS (GW_ID , GW_INSERT_TIMESTAMP , GW_STATUS, SOURCE_CODE , STREAM_CODE, IS_APPLICATION, VALUES_JSON ) 

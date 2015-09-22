@@ -1,10 +1,8 @@
 package org.csi.yucca.gateway.integration;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.crsh.console.jline.internal.Log;
-import org.csi.yucca.gateway.util.EventStateEnum;
+import org.apache.log4j.Logger;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.http.HttpStatus;
@@ -14,11 +12,11 @@ import org.springframework.integration.expression.ExpressionUtils;
 import org.springframework.integration.handler.advice.AbstractRequestHandlerAdvice;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.util.Assert;
 
 public class PreserveMessageRequestHTTPHandlerAdvice extends AbstractRequestHandlerAdvice {
+	private static final Logger log=Logger.getLogger(PreserveMessageRequestHTTPHandlerAdvice.class);
 
 
 	private volatile MessageChannel outputChannel;
@@ -71,7 +69,7 @@ public class PreserveMessageRequestHTTPHandlerAdvice extends AbstractRequestHand
 	}
 
 	private void evaluateHTTPStatusCodeSuccessExpression(Message<?> message, Object result) throws Exception {
-			Log.info("response:"+result);
+			log.info("response:"+result);
 			String httpCodeHeaderValue = null;
 			String responseDetailHeaderValue = null;
 			GenericMessage msg = (GenericMessage) result;
@@ -95,7 +93,7 @@ public class PreserveMessageRequestHTTPHandlerAdvice extends AbstractRequestHand
 	}
 
 	private void evaluateFailureExpression(Message<?> message, Exception exception) throws Exception {
-		Log.info("exception:"+exception.getMessage());
+		log.info("exception:"+exception.getMessage());
 		this.messagingTemplate.send(this.outputChannel, getMessageBuilderFactory().fromMessage(message).
 				setHeader(responseDetailHeaderName, exception.getMessage()).setHeader(httpCodeHeaderName, 999).
 				setHeader(statusHeaderName, statusValueException).build());

@@ -44,7 +44,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
     	RequestEntity<String> json = new RequestEntity<String>("{ a }",headers,
-    												HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+    												HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
     	
     	ResponseEntity<String> result;
 		try {
@@ -67,7 +67,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
     	RequestEntity<String> invalidJson = new RequestEntity<String>("{ a }",headers,
-    												HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+    												HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
     	
     	ResponseEntity<String> result = restTemplate.exchange(invalidJson,String.class);
 
@@ -83,7 +83,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	headers.add(HttpHeaders.ACCEPT, "application/json");
     	
     	RequestEntity<String> jsonValidButDifferent = new RequestEntity<String>("{ \"a\":\"a\" }",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDifferent,String.class);
 		
@@ -102,7 +102,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	RequestEntity<String> jsonValidButDiffComponent = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c00000\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDiffComponent,String.class);
 		
@@ -121,7 +121,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	RequestEntity<String> jsonValidButDiffComponent = new RequestEntity<String>("{"
     			+ "  \"stream\":\"ss\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c00000\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDiffComponent,String.class);
 		
@@ -145,7 +145,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	RequestEntity<String> jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -199,7 +199,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	RequestEntity<String> jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -208,7 +208,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58+0200\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -217,7 +217,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58.000+0200\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -226,7 +226,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
 		jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58.000+02:00\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -235,7 +235,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
 		jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58.000Z\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -244,7 +244,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
 		jsonValid = new RequestEntity<String>("{"
     			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-ss05-13T17:08:58.000Z\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -257,7 +257,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     			+ "{\"time\": \"2014-05-1ss3T17:08:58+0200\",\"components\": { \"c0\": 17.4 }},"
     			+ "{\"time\": \"2014-05-13T17:08:58.000+02:00\",\"components\": { \"c0\": 17.4 }}"
     			+ "]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -270,7 +270,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     			+ "{\"time\": \"2014-05-13T17:08:58+0200\",\"components\": { \"c0\": 17.4 }},"
     			+ "{\"time\": \"2014-05-13T17:08:58.000+02:00\",\"components\": { \"c0\": 17.4 }}"
     			+ "]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(jsonValid,String.class);
 		
@@ -295,7 +295,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	RequestEntity<String> json = new RequestEntity<String>("{"
     			+ "  \"stream\":\"\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05s-13T17:08:58Z\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	ResponseEntity<String> result = restTemplate.exchange(json,String.class);
 		
@@ -305,7 +305,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	json = new RequestEntity<String>("{"
     			+ "  \"stream\":null,\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
   		+ "\"time\": \"2014-05s-13T17:08:58Z\",\"components\": { \"c0\": 17.4 }}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	result = restTemplate.exchange(json,String.class);
 		
@@ -332,7 +332,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
   		+ "\"Intero\":11,\"Long\":12,\"Double\":1.2,\"Float\":1.3,\"Stringa\":\"ciao\",\"Booleano\":true,"
   		+ "\"Data\":\"2014-05-13T17:08:58Z\",\"Longitudine\":22.22,\"Latitudine\":33.33}"
   		+ "}]}",headers,
-				HttpMethod.POST,new URI("http://localhost:9000/api/input/"+codTenant));
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
 
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDiffComponent,String.class);
 		

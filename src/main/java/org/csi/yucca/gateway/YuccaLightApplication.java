@@ -8,26 +8,31 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.jms.annotation.EnableJms;
 
 @SpringBootApplication
 @EnableJms
 @Configuration
+@PropertySources({@PropertySource(value={"classpath:internal.properties"}),@PropertySource(value={"${ext.application.properties}"})})
 public class YuccaLightApplication extends SpringBootServletInitializer{
-
 
     public static void main(String[] args) {
     	ConfigurableApplicationContext ctx=SpringApplication.run(YuccaLightApplication.class, args);
    		ApplicationStartedEventHolderBean eventHolderBean = ctx.getBean(ApplicationStartedEventHolderBean.class);
-    	System.out.println("Event Processed?? - " + eventHolderBean.getEventFired());
     }
 
 
+    
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(applicationClass);
     }
 
     private static Class<YuccaLightApplication> applicationClass = YuccaLightApplication.class;
+	
+
 }
