@@ -25,13 +25,19 @@ If you deploy application in tomcat 8 you can choose one of this:
 Properties
 -----------
 
-name | description | mandatory 
------|-------------|----------
-yucca.realtime.httpEndpoint | HTTP Endpoint yucca for realtime | yes  
-yucca.a2a.httpEndpoint |  HTTP Endpoint yucca for A2A | yes  
-yucca.metadata.httpEndpoint | HTTP Endpoint yucca for retrieve metadata | yes  
-yucca.tenant.code | Registered tenant code (eg. sandbox) | yes
-yucca.tenant.username | Tenant tecnical username | yes
-yucca.tenant.password | Tenant tecnical password | yes
+name | description | mandatory | default value
+-----|-------------|---------- | ------------
+yucca.realtime.httpEndpoint | HTTP Endpoint yucca for realtime | yes |   
+yucca.a2a.httpEndpoint |  HTTP Endpoint yucca for A2A | yes  |
+yucca.metadata.httpEndpoint | HTTP Endpoint yucca to retrieve stream metadata | yes |  
+yucca.tenant.code | Registered tenant code (eg. sandbox) | yes|
+yucca.tenant.username | Tenant tecnical username | yes|
+yucca.tenant.password | Tenant tecnical password | yes| 
+yucca.realtime.httpTimeout| HTTP Endpoint yucca for realtime timeout (ms) | no |10000
+yucca.a2a.httpTimeout| HTTP Endpoint yucca for A2A timeout (ms) | no |10000
+yucca.a2a.pollerMaxmessage| The maximum number of failed messages to receive for each poll (resending failed messages) | no |3
+yucca.a2a.pollerFixeddelay| The fixed delay (ms) of poller (resending failed messages)| no |10000
+yucca.metadata.refreshCron| Stream metadata refresh cron expression | no |5 * * * * *
+yucca.metadata.refreshOnStartup| Stream metadata refresh at startup? | no | true
 
 
