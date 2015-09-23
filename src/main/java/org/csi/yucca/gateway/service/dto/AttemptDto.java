@@ -1,26 +1,25 @@
 package org.csi.yucca.gateway.service.dto;
 
-//import org.apache.commons.lang3.StringUtils;
-import org.dozer.Mapping;
+import java.io.Serializable;
 
 public class AttemptDto {
 
-	@Mapping("GW_ID")
     private String attemptGWId;
 	
-	@Mapping("ATTEMPT_ID")
 	private Long attemptId;
 
-    @Mapping("ATTEMPT_SEND_TIMESTAMP")
     private Long attemptSendTimestamp;
 
-    @Mapping("ATTEMPT_RECEIVE_TIMESTAMP")
     private Long attemptReceiveTimestamp;
+    
+    private String attemptFromStatus;
+    
+    private String attemptToStatus;
 
-    @Mapping("RESPONSE")
     private String attemptResponse;
+    
+    private String attemptResponseDetail;
 
-    @Mapping("ENDPOINT")
     private String attemptEndPoint;
 
 	public String getAttemptGWId() {
@@ -69,5 +68,63 @@ public class AttemptDto {
 
 	public void setAttemptEndPoint(String attemptEndPoint) {
 		this.attemptEndPoint = attemptEndPoint;
+	}
+
+	public String getAttemptFromStatus() {
+		return attemptFromStatus;
+	}
+
+	public void setAttemptFromStatus(String attemptFromStatus) {
+		this.attemptFromStatus = attemptFromStatus;
+	}
+
+	public String getAttemptToStatus() {
+		return attemptToStatus;
+	}
+
+	public void setAttemptToStatus(String attemptToStatus) {
+		this.attemptToStatus = attemptToStatus;
+	}
+
+	public String getAttemptResponseDetail() {
+		return attemptResponseDetail;
+	}
+
+	public void setAttemptResponseDetail(String attemptResponseDetail) {
+		this.attemptResponseDetail = attemptResponseDetail;
+	}
+
+	public static class AttemptKey implements Serializable{
+		
+		private static final long serialVersionUID = 2L;
+
+		protected AttemptKey () {
+			
+		}
+		
+		protected AttemptKey (String GW_ID, String ATTEMPT_ID) {
+			this.GW_ID=GW_ID;
+			this.ATTEMPT_ID=ATTEMPT_ID;
+		}
+		
+		private String GW_ID;
+		
+		private String ATTEMPT_ID;
+
+		public String getGW_ID() {
+			return GW_ID;
+		}
+
+		public void setGW_ID(String gW_ID) {
+			GW_ID = gW_ID;
+		}
+
+		public String getATTEMPT_ID() {
+			return ATTEMPT_ID;
+		}
+
+		public void setATTEMPT_ID(String aTTEMPT_ID) {
+			ATTEMPT_ID = aTTEMPT_ID;
+		}
 	}
 }

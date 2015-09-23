@@ -1,9 +1,16 @@
 package org.csi.yucca.gateway.service;
 
-import org.csi.yucca.gateway.persist.entity.StreamMetadataEntity;
-import org.csi.yucca.gateway.persist.entity.StreamMetadataEntity.MetadataKey;
+import java.util.List;
+
+import org.csi.yucca.gateway.service.dto.StreamMetadataDto.MetadataKey;
 import org.csi.yucca.gateway.service.dto.StreamMetadataDto;
 
-public interface StreamMetadataService extends GenericService<StreamMetadataEntity, StreamMetadataDto, MetadataKey>{
+public interface StreamMetadataService {
+	StreamMetadataDto findOne(MetadataKey id);
+    
+    List<StreamMetadataDto> findAll(String gwId);
 
+    List<StreamMetadataDto> findAll();
+    
+    void save(StreamMetadataDto dto);
 }

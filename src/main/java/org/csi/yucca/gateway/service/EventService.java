@@ -1,8 +1,15 @@
 package org.csi.yucca.gateway.service;
 
-import org.csi.yucca.gateway.persist.entity.Event;
+import java.util.List;
+
 import org.csi.yucca.gateway.service.dto.EventDto;
 
-public interface EventService extends GenericService<Event, EventDto, Long>{
+public interface EventService {
+	EventDto findOne(String id);
+    
+    List<EventDto> findAll(String gwId);
 
+    List<EventDto> findAll();
+    
+    void save(EventDto dto);
 }

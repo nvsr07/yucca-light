@@ -1,49 +1,34 @@
 package org.csi.yucca.gateway.service.dto;
-import javax.persistence.Entity;
 
-import org.dozer.Mapping;
-
+import java.io.Serializable;
 
 public class StreamMetadataDto {
-
 	
-	@Mapping("TENANT_CODE")
+	public StreamMetadataDto(){
+	}
+
 	private String tenantCode;
 	
-	
-	@Mapping("STREAM_CODE")
 	private String streamCode;
 
-	@Mapping("VIRTUALENTITY_CODE")
 	private String virtualEntityCode;
 
-	@Mapping("DEPLOYMENT_VERSION")
 	private Long deploymentVersion;
 	
-	
-	@Mapping("STREAM_NAME")
 	private String streamName;
 
-	
-	@Mapping("VIRTUALENTITY_NAME")
 	private String virtualEntityName;
 
-	@Mapping("VIRTUALENTITY_DESCRIPTION")
 	private String virtualEntityDescription;
 
-	@Mapping("VIRTUALENTITY_TYPE")
 	private String virtualEntityType;
 
-	@Mapping("VIRTUALENTITY_CATEGORY")
 	private String virtualEntityCategory;
 
-	@Mapping("LASTUPDATE_TIMESTAMP")
 	private Long lastUpdateTimestamp;
 
-	@Mapping("METADATA_JSON")
 	private String metadataJson;
 
-	@Mapping("SCHEMA_JSON")	
 	private String schemaJson;
 
 	public String getTenantCode() {
@@ -142,4 +127,60 @@ public class StreamMetadataDto {
 		this.schemaJson = schemaJson;
 	}
 
+	public static class MetadataKey implements Serializable{
+		
+		private static final long serialVersionUID = 2L;
+
+		protected MetadataKey () {
+			
+		}
+		
+		protected MetadataKey (String TENANT_CODE,String STREAM_CODE,String VIRTUALENTITY_CODE,Long DEPLOYMENT_VERSION) {
+			this.TENANT_CODE=TENANT_CODE;
+			this.STREAM_CODE=STREAM_CODE;
+			this.VIRTUALENTITY_CODE=VIRTUALENTITY_CODE;
+			this.DEPLOYMENT_VERSION=DEPLOYMENT_VERSION;
+		}
+		
+		private String TENANT_CODE;
+		
+		private String STREAM_CODE;
+
+		private String VIRTUALENTITY_CODE;
+
+		private Long DEPLOYMENT_VERSION;
+
+		public String getTENANT_CODE() {
+			return TENANT_CODE;
+		}
+
+		public void setTENANT_CODE(String TENANT_CODE) {
+			TENANT_CODE = TENANT_CODE;
+		}
+
+		public String getSTREAM_CODE() {
+			return STREAM_CODE;
+		}
+
+		public void setSTREAM_CODE(String STREAM_CODE) {
+			STREAM_CODE = STREAM_CODE;
+		}
+
+		public String getVIRTUALENTITY_CODE() {
+			return VIRTUALENTITY_CODE;
+		}
+
+		public void setVIRTUALENTITY_CODE(String VIRTUALENTITY_CODE) {
+			VIRTUALENTITY_CODE = VIRTUALENTITY_CODE;
+		}
+
+		public Long getDEPLOYMENT_VERSION() {
+			return DEPLOYMENT_VERSION;
+		}
+
+		public void setDEPLOYMENT_VERSION(Long DEPLOYMENT_VERSION) {
+			DEPLOYMENT_VERSION = DEPLOYMENT_VERSION;
+		}	
+		
+	}
 }

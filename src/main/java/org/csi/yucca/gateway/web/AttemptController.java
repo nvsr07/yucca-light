@@ -2,7 +2,6 @@ package org.csi.yucca.gateway.web;
 
 import java.util.List;
 
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
@@ -20,16 +19,18 @@ import org.csi.yucca.gateway.service.dto.AttemptDto;
 public class AttemptController {
 
     @Autowired
-    private DozerBeanMapper mapper;
-
-    @Autowired
     private AttemptService attemptService;
 
     @Autowired
     private MessageSource ms;
    
     @RequestMapping(value = "/attempts", method = RequestMethod.GET)
-    public @ResponseBody List<AttemptDto> attemptsList(String gwId) {
+    public @ResponseBody List<AttemptDto> attemptsList() {
+        return attemptService.findAll();
+    }
+   
+    @RequestMapping(value = "/attemptsGW", method = RequestMethod.GET)
+    public @ResponseBody List<AttemptDto> attemptsListGW(String gwId) {
         return attemptService.findAll(gwId);
     }
 }

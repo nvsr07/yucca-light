@@ -2,7 +2,6 @@ package org.csi.yucca.gateway.web;
 
 import java.util.List;
 
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
@@ -18,9 +17,6 @@ import org.csi.yucca.gateway.service.dto.EventDto;
 @Controller
 @Scope("request")
 public class EventController {
-
-    @Autowired
-    private DozerBeanMapper mapper;
 
     @Autowired
     private EventService eventService;

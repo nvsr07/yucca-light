@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.csi.yucca.gateway.service.StreamMetadataService;
 import org.csi.yucca.gateway.service.dto.StreamMetadataDto;
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @Scope("request")
 public class StreamMetadataController {
-    @Autowired
-    private DozerBeanMapper mapper;
 
     @Autowired
     private StreamMetadataService streamMetadataService;

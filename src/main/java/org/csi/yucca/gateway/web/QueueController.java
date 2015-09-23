@@ -12,7 +12,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
 
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;

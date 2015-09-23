@@ -2,11 +2,20 @@
 var translations_it = {
 	
 	LANG_KEY: 'it', 
+	CONSOLE_MSG_LIST_TITLE: 'Messaggi configurati',
 	CONSOLE_STREAM_LIST_TITLE: 'Stream configurati',
 	
 	STREAM: 'Stream',	
 	SMARTOBJECT: 'Smart Object',	
 	COMPONENTS: 'Componenti',
+	
+	MSG_SENSOR: 'Sensor',
+	MSG_STREAM: 'Stream',
+	MSG_GW_ID: 'Gateway ID',
+	MSG_GW_STATUS: 'Gateway status',
+	MSG_GW_ATTEMPT_RES: 'Codice response',
+	
+	MSG_LIST_SENSOR_FILTER: 'Filtra per Sensor',
 	
 	STREAM_DESCRIPTION: 'Descrizione',
 	STREAM_VERSION: 'Versione',

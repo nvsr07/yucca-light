@@ -1,47 +1,38 @@
 package org.csi.yucca.gateway.service.dto;
 
 //import org.apache.commons.lang3.StringUtils;
-import org.dozer.Mapping;
+//import org.dozer.Mapping;
 
 public class EventDto {
+	
+	public EventDto(){
+		
+	}
 
-	@Mapping("GW_ID")
     private String eventId;
 	
-	@Mapping("GW_INSERT_TIMESTAMP")
 	private Long eventInsertTimestamp;
 
-    @Mapping("GW_STATUS")
     private String eventStatus;
 
-    @Mapping("SOURCE_CODE")
     private String eventSourceCode;
 
-    @Mapping("STREAM_CODE")
     private String eventStreamCode;
 
-    @Mapping("IS_APPLICATION")
     private Boolean eventIsApp;
 
-    @Mapping("VALUES_JSON")
     private String eventJSON;
 
-    @Mapping("LAST_ATTEMPT_ID")
     private String eventLastAttempiID;
 
-    @Mapping("LAST_ATTEMPT_SEND_TIMESTAMP")
     private Long eventLastAttemptSendTimestamp;
 
-    @Mapping("LAST_ATTEMPT_RECEIVE_TIMESTAMP")
     private Long eventLastAttemptReceiveTimestamp;
 
-    @Mapping("LAST_RESPONSE")
     private String eventLastResponse;
 
-    @Mapping("LAST_ENDPOINT")
     private String eventLastEndpoint;
     
-    @Mapping("NUM_ATTEMPT")
     private Long eventNumAttempt;
 
 	public String getEventId() {

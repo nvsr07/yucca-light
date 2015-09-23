@@ -4,8 +4,7 @@ appControllers.controller('StreamMetadataController', [
 		'StreamMetadataService',
 		function($scope, $log, StreamMetadataService) {
 			$scope.streamMetadataList = [];
-			console.log("StreamMetadataController - getAll",
-					StreamMetadataService.getAll().$promise);
+			console.log("StreamMetadataController - getAll", StreamMetadataService.getAll().$promise);
 
 			$scope.streamMetadataList = StreamMetadataService.getAll();
 

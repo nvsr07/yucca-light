@@ -27,9 +27,7 @@ appServices.factory('StreamMetadataService', function($log, $resource) {
 									streamMetadata.rowStyle = 'stream-old-version';
 									break;
 								}
-								
 							}
-            			    
             			    var exampleMessage = "{\"stream\": \""+streamMetadataComplete.streamCode+"\",\n";
             			    exampleMessage += "  \"sensor\": \"" + streamMetadataComplete.virtualEntityCode+ "\",\n";
             			    exampleMessage += "  \"values\":\n";
@@ -50,8 +48,6 @@ appServices.factory('StreamMetadataService', function($log, $resource) {
             			    		componentExample = "45.0706029";
             			    	else if(component.dataType=='longitude')
             			    		componentExample = "7.6867102";
-            			    	
-            			    	
             			    	
             			    	exampleMessage += "        \""+ streamMetadata.streams.stream.components.element[j].componentName+"\":"+componentExample+"";
             			    	if(j<streamMetadata.streams.stream.components.element.length-1)
@@ -74,7 +70,6 @@ appServices.factory('StreamMetadataService', function($log, $resource) {
         });
         return streamMetadataResource.query();
     };
-
     return streamMetadataService;
 });
 

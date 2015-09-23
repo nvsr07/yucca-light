@@ -11,7 +11,6 @@ import java.util.SimpleTimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.commons.lang3.StringUtils;
 import org.csi.yucca.gateway.api.ParseValidationUtil;
 import org.csi.yucca.gateway.api.dto.Measure;
 import org.csi.yucca.gateway.api.dto.StreamSensorEvent;
