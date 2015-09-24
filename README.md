@@ -39,12 +39,12 @@ spring.activemq.user
 spring.activemq.password
 ``` 
 
-for example default coinfiguration for Activemq work with:
+for example default configuration for ActiveMQ works with:
 ```
 spring.activemq.broker-url=tcp://localhost:61620
 spring.activemq.user=system
 spring.activemq.password=manager
 ``` 
 
-Yucca-light detect external broker url and doesn't start internal AcqtiveMQ.
+Yucca-light detect external broker url and doesn't start internal ActiveMQ.
 
