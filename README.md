@@ -27,3 +27,24 @@ To use yucca-light you must follow these steps:
 4. Configure properties (see [Properties]( PROPERTIES.md))
 5. Run from shell or deploy on tomcat 8
 
+yucca-light is a [Spring boot application](http://projects.spring.io/spring-boot/), you can code or use all spring boot capabilities.
+
+Run with embedded or external ActiveMQ
+--------------------------------------
+
+In order to run yucca-light using an external ActiveMQ you must configure these properties in your properties file
+```
+spring.activemq.broker-url
+spring.activemq.user
+spring.activemq.password
+``` 
+
+for example default coinfiguration for Activemq work with:
+```
+spring.activemq.broker-url=tcp://localhost:61620
+spring.activemq.user=system
+spring.activemq.password=manager
+``` 
+
+Yucca-light detect external broker url and doesn't start internal AcqtiveMQ.
+

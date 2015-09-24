@@ -27,6 +27,8 @@ Properties
 
 name | description | mandatory | default value
 -----|-------------|---------- | ------------
+security.user.name|username of user authorized to console and api of yucca-light|yes|admin
+security.user.password|password of user authorized to console and api of yucca-light|yes|admin
 yucca.realtime.httpEndpoint | HTTP Endpoint yucca for realtime | yes |   
 yucca.a2a.httpEndpoint |  HTTP Endpoint yucca for A2A | yes  |
 yucca.metadata.httpEndpoint | HTTP Endpoint yucca to retrieve stream metadata | yes |  
@@ -39,5 +41,8 @@ yucca.a2a.pollerMaxmessage| The maximum number of failed messages to receive for
 yucca.a2a.pollerFixeddelay| The fixed delay (ms) of poller (resending failed messages)| no |10000
 yucca.metadata.refreshCron| Stream metadata refresh cron expression | no |5 * * * * *
 yucca.metadata.refreshOnStartup| Stream metadata refresh at startup? | no | true
+spring.activemq.broker-url| Url for external (or internal as default) ActiveMQ | no|vm://localhost
+spring.activemq.user| username for external (or internal as default) ActiveMQ | no|admin
+spring.activemq.password| username for external (or internal as default) ActiveMQ | no|secret
 
 
