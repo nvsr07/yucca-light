@@ -1,11 +1,11 @@
-appServices.factory('QueueService', function($log, $resource) {
-
-	var queueService = {};
+appServices.factory('AttemptsService', function($log, $resource) {
+// /attemptsGW
+	var attemptService = {};
 	
 	return {
 		getAll: function () {
 			console.log('entro in getAll');
-	        var summaryResource = $resource('queue/summary?queueName=*', {}, {
+	        var summaryResource = $resource('attempts', {}, {
 	            query: {
 	            	method: 'GET', 
 	            	params: {}, 
@@ -14,6 +14,9 @@ appServices.factory('QueueService', function($log, $resource) {
 	            		
 	            		var result = angular.fromJson(data);
 	            		
+	            		console.log('result', result);
+	            		
+	            		/*
 	        			angular.forEach(result, function(queue, key) {
 	                    	var queuKV = key.split('.');
 	                    	if (queuKV[0] == 'yucca_light'){
@@ -30,6 +33,7 @@ appServices.factory('QueueService', function($log, $resource) {
 	                            });
 	                    	}
 	        			});
+	        			*/
 	            	}
 	            }
 	        });

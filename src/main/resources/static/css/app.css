@@ -40,3 +40,10 @@ footer img{ margin-bottom: 1em;}
 footer .last-row{padding: 2em; margin: 2em; text-align: center; border-top: solid 1px #b4b4b4;}
 footer .footer-separator{color: #b4b4b4; padding: 0 2em; }
 
+.panel-default > .panel-heading {background-color:#009688}
+.panel-default > .panel-heading a {color:white; text-decoration: none}
+
+h4 > span {text-decoration: none; text-transform: uppercase;}
+.list-group .list-group-item .list-group-item-heading {color:white;}
+
+.stateName {text-decoration: none; text-transform: uppercase; padding-right: 1em; font-weight: bold;}

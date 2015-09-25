@@ -1,165 +1,128 @@
 <div ng-controller="QueueController">
 	<div class="panel panel-primary">
-		<div class="panel-heading">
+		<accordion-heading>
 			<h3><span translate>CONSOLE_MSG_LIST_TITLE</span></h3>
-		</div>
+		</accordion-heading> 
 		<div class="panel-body">
 			<div class="row">
-				<!--div class="container"-->
-					<div id="userList" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<!-- div class="input-group">
-							<input class="form-control" id="search" name="search" placeholder="Search for" ng-model="query" required="required" />
-							<span class="input-group-btn">
-								<button type="submit" class="btn btn-default">
-									<i class="glyphicon glyphicon-search"></i>
-								</button>
-							</span>
-						</div -->
-						<div class='clearfix  content-toolbar'>	
-							<div class="pull-right">
-								<form class="form-inline" role="form">
-									<div class="form-group">
-										<input type="text" class="form-control col-xs-2" ng-model="codeFilter" placeholder="{{'MSG_LIST_SENSOR_FILTER'|translate}}" />
-									</div>
-								</form>
-							</div>
+				<div id="userList" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<!-- div class='clearfix  content-toolbar'>	
+						<div class="pull-right">
+							<form class="form-inline" role="form">
+								<div class="form-group">
+									<input type="text" class="form-control col-xs-2" ng-model="codeFilter" placeholder="{{'MSG_LIST_SENSOR_FILTER'|translate}}" />
+								</div>
+							</form>
 						</div>
-						<div class="table-responsive console-streamList-table">
-							<div class="list-group">
-								<div class="list-group-item">
-									<div ng-repeat="(curcodaKey,curcodaVal) in queueList" class="list-group-item" style="margin-top: 16px">
-										<div class="content">
-											<h4 class="list-group-item-heading">coda: {{curcodaKey}}</h4>
-												<table class="table">
-													<thead>
-														<tr>
-															<th>
-																<a href="" ng-click="predicate = 'payload.measures.sourceCode'; reverse=!reverse">
-																	<span translate>MSG_SENSOR</span> 
-																	<span ng-show="predicate=='payload.measures.sourceCode' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
-																	<span ng-show="predicate=='payload.measures.sourceCode' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
-																</a>
-															</th>
-															<th>
-																<a href="" ng-click="predicate = 'payload.measures.streamCode'; reverse=!reverse">
-																	<span translate>MSG_STREAM</span> 
-																	<span ng-show="predicate=='payload.measures.streamCode' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
-																	<span ng-show="predicate=='payload.measures.streamCode' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
-																</a>
-															</th>
-															<th>
-																<a href="" ng-click="predicate = 'headers.gwId'; reverse=!reverse">
-																	<span translate>MSG_GW_ID</span> 
-																	<span ng-show="predicate=='headers.gwId' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
-																	<span ng-show="predicate=='headers.gwId' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
-																</a>
-															</th>
-															<th>
-																<a href="" ng-click="predicate = 'headers.gwStatus'; reverse=!reverse">
-																	<span translate>MSG_GW_STATUS</span> 
-																	<span ng-show="predicate=='headers.gwStatus' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
-																	<span ng-show="predicate=='headers.gwStatus' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
-																</a>
-															</th>
-															<th>
-																<a href="" ng-click="predicate = 'headers.gwAttemptResponse'; reverse=!reverse">
-																	<span translate>MSG_GW_ATTEMPT_RES</span> 
-																	<span ng-show="predicate=='headers.gwAttemptResponse' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
-																	<span ng-show="predicate=='headers.gwAttemptResponse' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
-																</a>
-															</th>
-															<th>&nbsp;</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr ng-show="showLoading">
-															<td colspan='6' >
-																<div class='ajax-loading-container'>
-																	<span class='ajax-loading-big'></span>
-																	<h4>Loading...</h4>
-																</div>
-															</td>
-														</tr>
-														<tr  class='{{stream.rowStyle}}' ng-repeat='evt in curcodaVal | orderBy:predicate:reverse'>
-															<td class='text-left'>
-																<a href ng-click="stream.showDetail = !stream.showDetail">
-																	<strong>{{evt.payload.sourceCode}}</strong>
-																</a>
-															</td>
-															<td><small>{{evt.payload.streamCode}}</small></td>
-															<td>{{evt.headers.gwId}}</td>
-															<td class='text-left'>{{evt.headers.gwStatus}}</td>
-															<td class='text-left'>{{evt.headers.gwAttemptResponse}}</td>
-															<td>
-																<i ng-click='stream.showDetail = true' ng-show='!stream.showDetail' class="glyphicon  glyphicon-chevron-right"></i>
-																<i ng-click='stream.showDetail = false' ng-show='stream.showDetail' class="glyphicon glyphicon-chevron-down"></i>
-															</td>
-														</tr>
-														<tr  class='{{stream.rowStyle}}'  ng-repeat-end  ng-show='stream.showDetail' class=''>
-															<td colspan='3' class='table-td-no-border-top' >	
-																<div class='components-panel'>
-																	<h4><span translate>COMPONENTS</span></h4>
-																	<table class='table table-condensed'>
-																		<thead>
-																			<tr class='{{stream.rowStyle}}'>
-																				<th translate>STREAM_COMPONENT_NAME</th>
-																				<th translate>STREAM_COMPONENT_ALIAS</th>
-																				<th translate>STREAM_COMPONENT_TOLERANCE</th>
-																				<th translate>STREAM_COMPONENT_MEASUREUNIT</th>
-																				<th translate>STREAM_COMPONENT_PHENOMENON</th>
-																				<th translate>STREAM_COMPONENT_DATATYPE</th>
-																			</tr>
-																		</thead>
-																		<tbody>
-																			<tr ng-repeat='component in stream.streams.stream.components.element' class='{{stream.rowStyle}}'>
-																				<td>{{component.componentName}}</td>
-																				<td>{{component.componentAlias}}</td>
-																				<td>{{component.tolerance}}</td>
-																				<td>{{component.measureUnitCategory}} - {{component.measureUnit}}</td>
-																				<td>{{component.phenomenonCategory}} - {{component.phenomenon}}</td>
-																				<td>{{component.dataType}}</td>
-																			</tr>
-																		</tbody>
-																	</table>
-																</div>
-															</td>			
-															<td colspan='3' class='table-td-no-border-top'>	
-																<div>
-																	<h4><span translate>STREAM_MESSAGE_EXAMPLE_TITLE</span></h4>
-																	<p><small><pre pretty-json="stream.exampleMessage"/></small></p>
-																</div>
-															</td>													
-														</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
+					</div -->
+					<div class="table-responsive console-streamList-table">
+						<div class="list-group">
+							<div class="list-group-item">
+								<accordion>
+									<accordion-group ng-repeat="(curcodaKey, curcodaVal) in queueList">
+										<accordion-heading>
+											<h4 ng-click="loadMessagesOfQueue(curcodaVal.name)"><span class="stateName" translate>{{curcodaVal.state}}</span><span class="badge">{{curcodaVal.countMessages}}</span></h4>
+										</accordion-heading> 
+										<table class="table" class="list-group-item">
+												<thead>
+													<tr>
+														<th>
+															<a href="" ng-click="predicate = 'payload.measures.sourceCode'; reverse=!reverse">
+																<span translate>MSG_SENSOR</span> 
+																<span ng-show="predicate=='payload.measures.sourceCode' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
+																<span ng-show="predicate=='payload.measures.sourceCode' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
+															</a>
+														</th>
+														<th>
+															<a href="" ng-click="predicate = 'payload.measures.streamCode'; reverse=!reverse">
+																<span translate>MSG_STREAM</span> 
+																<span ng-show="predicate=='payload.measures.streamCode' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
+																<span ng-show="predicate=='payload.measures.streamCode' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
+															</a>
+														</th>
+														<th>
+															<a href="" ng-click="predicate = 'headers.gwId'; reverse=!reverse">
+																<span translate>MSG_GW_ID</span> 
+																<span ng-show="predicate=='headers.gwId' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
+																<span ng-show="predicate=='headers.gwId' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
+															</a>
+														</th>
+														<th>
+															<a href="" ng-click="predicate = 'headers.gwAttemptResponse'; reverse=!reverse">
+																<span translate>MSG_GW_ATTEMPT_RES</span> 
+																<span ng-show="predicate=='headers.gwAttemptResponse' && !reverse" class="glyphicon glyphicon-chevron-up small"></span>
+																<span ng-show="predicate=='headers.gwAttemptResponse' && reverse" class="glyphicon glyphicon-chevron-down small"></span>
+															</a>
+														</th>
+														<th>&nbsp;</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-show="showLoading">
+														<td colspan='6' >
+															<div class='ajax-loading-container'>
+																<span class='ajax-loading-big'></span>
+																<h4>Loading...</h4>
+															</div>
+														</td>
+													</tr>
+													<tr  class='{{queue.rowStyle}}' ng-repeat='evt in curcodaVal.messages | orderBy:predicate:reverse'>
+														<td class='text-left'>
+															<a href ng-click="queue.showDetail = !queue.showDetail">
+																<strong>{{evt.payload.sourceCode}}</strong>
+															</a>
+														</td>
+														<td><small>{{evt.payload.streamCode}}</small></td>
+														<td>{{evt.headers.gwId}}</td>
+														<td class='text-left'>{{evt.headers.gwAttemptResponse}}</td>
+														<td>
+															<i ng-click='queue.showDetail = true' ng-show='!queue.showDetail' class="glyphicon glyphicon-chevron-right"></i>
+															<i ng-click='queue.showDetail = false' ng-show='queue.showDetail' class="glyphicon glyphicon-chevron-down"></i>
+														</td>
+													</tr>
+													<tr  class='{{queue.rowStyle}}'  ng-repeat-end  ng-show='queue.showDetail' class=''>
+														<td colspan='3' class='table-td-no-border-top' >	
+															<div class='components-panel'>
+																<h4><span translate>ATTEMPTS</span></h4>
+																<table class='table table-condensed'>
+																	<thead>
+																		<tr class='{{stream.rowStyle}}'>
+																			<th translate>STREAM_COMPONENT_NAME</th>
+																			<th translate>STREAM_COMPONENT_ALIAS</th>
+																			<th translate>STREAM_COMPONENT_TOLERANCE</th>
+																			<th translate>STREAM_COMPONENT_MEASUREUNIT</th>
+																			<th translate>STREAM_COMPONENT_PHENOMENON</th>
+																			<th translate>STREAM_COMPONENT_DATATYPE</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat='component in stream.streams.stream.components.element' class='{{queue.rowStyle}}'>
+																			<td>{{component.componentName}}</td>
+																			<td>{{component.componentAlias}}</td>
+																			<td>{{component.tolerance}}</td>
+																			<td>{{component.measureUnitCategory}} - {{component.measureUnit}}</td>
+																			<td>{{component.phenomenonCategory}} - {{component.phenomenon}}</td>
+																			<td>{{component.dataType}}</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</td>			
+														<td colspan='3' class='table-td-no-border-top'>	
+															<div>
+																<h4><span translate>STREAM_MESSAGE_EXAMPLE_TITLE</span></h4>
+																<p><small><pre pretty-json="stream.exampleMessage"/></small></p>
+															</div>
+														</td>													
+													</tr>
+												</tbody>
+											</table>
+									<accordion-group>
+								</accordion> 
 							</div>
-							<!--  div class="list-group">
-								<div class="list-group-item">
-									<div ng-repeat="(curcodaKey,curcodaVal) in events "
-										class="list-group-item" style="margin-top: 16px">
-										<div class="row-content">
-											<h4 class="list-group-item-heading">coda: {{curcodaKey}}</h4>
-											<div ng-repeat="evt in curcodaVal " class="list-group-item"
-												style="margin-top: 16px">
-												<div class="row-content">
-													sensor {{evt.payload.sourceCode}}<br /> stream
-													{{evt.payload.streamCode}}<br /> headers.gwId
-													{{evt.headers.gwId}}<br /> headers.gwStatus
-													{{evt.headers.gwStatus}}<br /> headers.gwAttemptResponse
-													{{evt.headers.gwAttemptResponse}}<br />
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div -->
 						</div>
 					</div>
-				<!--/div-->
+				</div>
 			</div>
 		</div>
 	</div>

@@ -4,11 +4,11 @@ appControllers.controller('QueueController', [
         'QueueService', 
         function($scope, $log, QueueService) {
         	$scope.queueList = [];
-			console.log("QueueController - getAll", QueueService.getAll().$promise);
+			console.log("QueueController - getAll", QueueService.getAll());
 
         	$scope.queueList = QueueService.getAll();
 
-			$scope.filteredStreamsList = [];
+			$scope.filteredQueuesList = [];
 			$scope.codeFilter = null;
 			$scope.currentPage = 1;
 			$scope.pageSize = 10;
@@ -16,13 +16,18 @@ appControllers.controller('QueueController', [
 			$scope.predicate = '';
 			$scope.showLoading = false;
 
-			$scope.searchCodeFilter = function(stream) {
+			$scope.searchCodeFilter = function(queue) {
 				var keyword = new RegExp($scope.codeFilter, 'i');
-				return !$scope.codeFilter || keyword.test(stream.streamCode) || keyword.test(stream.streamName);
+				return !$scope.codeFilter || keyword.test(queue.streamCode) || keyword.test(queue.sourceCode);
 			};
 
 			$scope.$watch('codeFilter', function(newCode) {
 				$scope.currentPage = 1;
-				$scope.totalItems = $scope.filteredStreamsList.length;
+				$scope.totalItems = $scope.filteredQueuesList.length;
 			});
+			
+			$scope.loadMessagesOfQueue = function(queueName){
+				console.log('queueName', queueName);
+				QueueService.getMessagesOfQueue(queueName);
+			}
 } ]);

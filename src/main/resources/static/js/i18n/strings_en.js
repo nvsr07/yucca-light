@@ -2,8 +2,8 @@
 var translations_en = {
 	
 	LANG_KEY: 'en', 
-	CONSOLE_MSG_LIST_TITLE: 'Configurated messages',
-	CONSOLE_STREAM_LIST_TITLE: 'Configurated streams',
+	CONSOLE_MSG_LIST_TITLE: 'Gateway Status',
+	CONSOLE_STREAM_LIST_TITLE: 'Configurated Streams',
 
 	STREAM: 'Stream',
 	SMARTOBJECT: 'Smart Object',	

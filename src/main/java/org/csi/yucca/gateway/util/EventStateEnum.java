@@ -9,6 +9,4 @@ public enum EventStateEnum {
 	SENDING_A2A_PROGRESS,
 	SENT_A2A, 
 	SENT_INVALID
-	
-	
 }
