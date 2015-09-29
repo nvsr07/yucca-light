@@ -1,6 +1,7 @@
 package org.csi.yucca.gateway.api;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.csi.yucca.gateway.api.dto.StreamSensorEvent;
 import org.csi.yucca.gateway.configuration.StreamConfigurationDAO;
@@ -57,4 +58,15 @@ public class InputManager {
 
 	}
 
+	
+	public static void main(String[] args) throws Exception {
+		Jackson2JsonObjectMapper mapper = new Jackson2JsonObjectMapper();
+		
+		
+		
+		Map<String, Object> obj = mapper.fromJson("{\"pippo\":aaaas}", Map.class);
+		System.out.println(obj.getClass().getName());
+		System.out.println(obj.get("pippo").getClass().getName());
+		
+	}
 }

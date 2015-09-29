@@ -1,5 +1,10 @@
 package org.csi.yucca.gateway.configuration.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class StreamConfiguration {
@@ -78,9 +83,9 @@ public class StreamConfiguration {
 		jsonSchema += "\"type\": \"object\",";
 		jsonSchema += "\"properties\": {";
 
-		String requredComponentName = "";
+		List<String> requredComponents = new ArrayList<>();
 		if (getStreams().getStream().getComponents() != null && getStreams().getStream().getComponents().getElement() != null) {
-			int counter = 0;
+			int counter=0;
 			int size = getStreams().getStream().getComponents().getElement().size();
 			for (Element component : getStreams().getStream().getComponents().getElement()) {
 				counter++;
@@ -93,16 +98,17 @@ public class StreamConfiguration {
 				} else if ("int".equals(component.getDataType())|| "long".equals(component.getDataType()) ) {
 					jsonSchema += "\"type\" : \"integer\""; // FIXME gestire long
 				} else if ("dateTime".equals(component.getDataType())) {
-					jsonSchema += "\"type\" : \"string\",  \"format\": \"date-time\"";
+					jsonSchema += "\"type\" : \"string\",  \"pattern\": \"((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))T(([01][0-9])|(2[0-3]))(:[0-5][0-9]){2}(\\\\.[0-9]+)?(([\\\\+|\\\\-]((0[0-9])|(1[0-2]))(:[0-5][0-9]))|(\\\\+13(:[0-5][0-9])(:[0-5][0-9]))|\\\\+14:00|Z|([\\\\+|\\\\-]((0[0-9])|(1[0-2]))([0-5][0-9]))|(\\\\+13([0-5][0-9])([0-5][0-9]))|\\\\+1400)\"";
 				} else
 					jsonSchema += "\"type\" : \"" + component.getDataType() + "\"";
 
 				jsonSchema += "}" + separator;
-				requredComponentName += "\"" + component.getComponentName() + "\"" + separator;
+				if (component.getSinceVersion()==null || component.getSinceVersion().equals(1))
+					requredComponents.add("\"" + component.getComponentName() + "\"");
 			}
 		}
 		jsonSchema += "},";
-		jsonSchema += "\"required\": [" + requredComponentName + "]";
+		jsonSchema += "\"required\": [" + StringUtils.join(requredComponents, ",")+ "]";
 		jsonSchema += "}";
 		jsonSchema += "}";
 		jsonSchema += "}";

@@ -10,7 +10,8 @@ public class Element {
 	private String phenomenon;
 	private String phenomenonCategory;
 	private String dataType;
-
+	private Integer sinceVersion;
+	
 	public Element() {
 		super();
 	}
@@ -77,6 +78,14 @@ public class Element {
 
 	public void setDataType(String dataType) {
 		this.dataType = dataType;
+	}
+
+	public Integer getSinceVersion() {
+		return sinceVersion;
+	}
+
+	public void setSinceVersion(Integer sinceVersion) {
+		this.sinceVersion = sinceVersion;
 	}
 
 }

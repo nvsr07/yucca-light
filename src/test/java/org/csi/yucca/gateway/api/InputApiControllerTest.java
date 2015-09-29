@@ -163,7 +163,38 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	
     }
 	
-	
+	@Test
+    public void testJsonValidWithStringLong() throws URISyntaxException {
+		setMockYuccaRTServiceServer();
+		
+		mockYuccaRTServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-stream/api/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+		
+		MultiValueMap<String, String> headers = new HttpHeaders();
+    	headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
+    	headers.add(HttpHeaders.ACCEPT, "application/json");
+    	
+    	RequestEntity<String> jsonValid = new RequestEntity<String>("{"
+    			+ "  \"stream\":\"temperature\",\"sensor\": \"550e8400-e29b-41d4-a716-446655440000\",\"values\": [{"
+  		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": { \"c0\": \"17.4\" }}]}",headers,
+				HttpMethod.POST,new URI("http://localhost:9000/yucca-light/api/input/"+codTenant));
+
+    	ResponseEntity<String> result = restTemplate.exchange(jsonValid,String.class);
+		
+		Assert.assertTrue(result.getStatusCode()== HttpStatus.ACCEPTED);
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		mockYuccaRTServiceServer.verify();
+		removeMockYuccaRTServiceServer();
+    	
+    }
 	@Test
     public void testJsonDifferentTimeformat() throws URISyntaxException {
 		setMockYuccaRTServiceServer();
@@ -366,7 +397,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     			+ "  \"stream\":\"aleStreamTuttiTipiDa\",\"sensor\": \"c4b5f767-1de7-4d49-9d48-06602c704469\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": {"
   		+ "\"Intero\":11,\"Long\":12,\"Double\":1.2,\"Float\":1.3,\"Stringa\":\"ciao\",\"Booleano\":true,"
-  		+ "\"Data\":\"2014-05-13T17:08:58Z\",\"Longitudine\":22.22,\"Latitudine\":33.33}"
+  		+ "\"Data\":\"2014-05-13T17:08:58+01:00\",\"Longitudine\":22.22,\"Latitudine\":33.33}"
   		+ "}]}";
 		
 		final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();

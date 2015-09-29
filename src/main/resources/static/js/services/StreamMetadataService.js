@@ -31,7 +31,7 @@ appServices.factory('StreamMetadataService', function($log, $resource) {
             			    var exampleMessage = "{\"stream\": \""+streamMetadataComplete.streamCode+"\",\n";
             			    exampleMessage += "  \"sensor\": \"" + streamMetadataComplete.virtualEntityCode+ "\",\n";
             			    exampleMessage += "  \"values\":\n";
-            			    exampleMessage += "    [{\"time\": "+ new Date().getTime() +",\n";
+            			    exampleMessage += "    [{\"time\": \"2015-09-14T18:48:34Z\",\n";
             			    exampleMessage += "      \"components\":{\n";
             			    for (var j = 0; j < streamMetadata.streams.stream.components.element.length; j++) {
             			    	var component = streamMetadata.streams.stream.components.element[j];
@@ -43,7 +43,7 @@ appServices.factory('StreamMetadataService', function($log, $resource) {
             			    	else if(component.dataType=='boolean')
             			    		componentExample = "true";
             			    	else if(component.dataType=='dateTime')
-            			    		componentExample = "\"2015-09-14'T'18:48:34Z\"";
+            			    		componentExample = "\"2015-09-14T18:48:34Z\"";
             			    	else if(component.dataType=='latitude')
             			    		componentExample = "45.0706029";
             			    	else if(component.dataType=='longitude')
