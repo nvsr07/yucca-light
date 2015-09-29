@@ -94,9 +94,9 @@ public class StreamConfiguration {
 
 				if ("float".equals(component.getDataType()) || "double".equals(component.getDataType()) || "longitude".equals(component.getDataType())
 						|| "latitude".equals(component.getDataType())) {
-					jsonSchema += "\"type\" : \"number\"";
+					jsonSchema += "\"anyOf\": [ {\"type\": \"string\" , \"pattern\":\"^[-+]?[0-9]*\\\\.?[0-9]+$\"},{\"type\": \"number\"}]  ";
 				} else if ("int".equals(component.getDataType())|| "long".equals(component.getDataType()) ) {
-					jsonSchema += "\"type\" : \"integer\""; // FIXME gestire long
+					jsonSchema += "\"anyOf\": [ {\"type\": \"string\" , \"pattern\":\"^[-+]?[0-9]+$\"},{\"type\": \"integer\"}]  "; 
 				} else if ("dateTime".equals(component.getDataType())) {
 					jsonSchema += "\"type\" : \"string\",  \"pattern\": \"((000[1-9])|(00[1-9][0-9])|(0[1-9][0-9]{2})|([1-9][0-9]{3}))-((0[1-9])|(1[012]))-((0[1-9])|([12][0-9])|(3[01]))T(([01][0-9])|(2[0-3]))(:[0-5][0-9]){2}(\\\\.[0-9]+)?(([\\\\+|\\\\-]((0[0-9])|(1[0-2]))(:[0-5][0-9]))|(\\\\+13(:[0-5][0-9])(:[0-5][0-9]))|\\\\+14:00|Z|([\\\\+|\\\\-]((0[0-9])|(1[0-2]))([0-5][0-9]))|(\\\\+13([0-5][0-9])([0-5][0-9]))|\\\\+1400)\"";
 				} else

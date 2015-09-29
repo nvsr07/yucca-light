@@ -388,7 +388,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
 				+ "\"values\": {\"type\": \"array\",\"minItems\" : 1,\"items\": { \"type\": \"object\","
 				+ "\"properties\": {\"time\": {\"type\": \"string\"},"
 				+ "\"components\" : {\"type\": \"object\",\"properties\": {"
-				+ "\"Intero\" : {\"type\" : \"integer\"},"
+				+ "\"Intero\" : {\"type\" : [\"integer\" , \"string\"]},"
 				+ "\"Long\" : {\"type\" : \"number\"},"
 				+ "\"Double\" : {\"type\" : \"number\"},"
 				+ "\"Float\" : {\"type\" : \"number\"},"
@@ -402,7 +402,7 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
 		String json = "{"
     			+ "  \"stream\":\"aleStreamTuttiTipiDa\",\"sensor\": \"c4b5f767-1de7-4d49-9d48-06602c704469\",\"values\": [{"
   		+ "\"time\": \"2014-05-13T17:08:58Z\",\"components\": {"
-  		+ "\"Intero\":11,\"Long\":12,\"Double\":1.2,\"Float\":1.3,\"Stringa\":\"ciao\",\"Booleano\":true,"
+  		+ "\"Intero\":\"11\",\"Long\":12,\"Double\":1.2,\"Float\":1.3,\"Stringa\":\"ciao\",\"Booleano\":true,"
   		+ "\"Data\":\"2014-05-13T17:08:58+01:00\",\"Longitudine\":22.22,\"Latitudine\":33.33}"
   		+ "}]}";
 		
