@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(Suite.class)
 @SuiteClasses({ LoadConfigurationTest.class,
 				RefreshConfigurationTest.class,
-				InputApiControllerTest.class,
-				GatewayIntegrationSuite.class
+				GatewayIntegrationSuite.class,
+				InputApiControllerTest.class
 })
 public class YuccaLightApplicationTests {
 

@@ -67,6 +67,15 @@ public class GatewayIntegrationA2ATest extends AbstractIntegrationTest{
 		int numeroMessaggiCoda =  IntegrationTestUtils.countQueueElement("yucca_light.sent_a2a", jmsTemplate);
 
 		setMockYuccaA2AServiceServer();
+
+		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-api/stream/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
+		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
+				requestTo("https://yucca-api/stream/input/"+codTenant)).
+			andRespond(MockRestResponseCreators.withSuccess());
+
 		
 		yuccaLikeService.sendEventToYucca(msg);
 		yuccaLikeService.sendEventToYucca(msg1);
@@ -74,13 +83,6 @@ public class GatewayIntegrationA2ATest extends AbstractIntegrationTest{
 		yuccaLikeService.sendEventToYucca(msg3);
 
 		// verify only 2 calls (3 + 1)
-		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
-				requestTo("https://yucca-api/stream/input/"+codTenant)).
-			andRespond(MockRestResponseCreators.withSuccess());
-
-		mockYuccaA2AServiceServer.expect(MockRestRequestMatchers.
-				requestTo("https://yucca-api/stream/input/"+codTenant)).
-			andRespond(MockRestResponseCreators.withSuccess());
 
 
 		Thread.sleep(10000);

@@ -368,7 +368,13 @@ public class InputApiControllerTest extends AbstractIntegrationTest {
     	ResponseEntity<String> result = restTemplate.exchange(jsonValidButDiffComponent,String.class);
 		
 		Assert.assertTrue(result.getStatusCode().is2xxSuccessful());
-    	
+		
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		mockYuccaRTServiceServer.verify();
 		removeMockYuccaRTServiceServer();
 
