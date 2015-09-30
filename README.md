@@ -44,7 +44,7 @@ spring.activemq.password
 
 for example default configuration for ActiveMQ works with:
 ```
-spring.activemq.broker-url=tcp://localhost:61620
+spring.activemq.broker-url=tcp://localhost:61616
 spring.activemq.user=system
 spring.activemq.password=manager
 ``` 

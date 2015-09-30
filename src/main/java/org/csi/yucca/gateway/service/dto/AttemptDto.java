@@ -6,7 +6,7 @@ public class AttemptDto {
 
     private String attemptGWId;
 	
-	private Long attemptId;
+	private String attemptId;
 
     private Long attemptSendTimestamp;
 
@@ -30,11 +30,11 @@ public class AttemptDto {
 		this.attemptGWId = attemptGWId;
 	}
 
-	public Long getAttemptId() {
-		return attemptId;
+	public String getAttemptId() {
+		return attemptId;  
 	}
 
-	public void setAttemptId(Long attemptId) {
+	public void setAttemptId(String attemptId) {
 		this.attemptId = attemptId;
 	}
 

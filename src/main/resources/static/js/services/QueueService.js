@@ -13,6 +13,7 @@ appServices.factory('QueueService', function($log, $resource) {
 	            	transformResponse: function (data) {
 	            		
 	            		var result = angular.fromJson(data);
+	            		console.log('result', result);
 	            		
 	        			angular.forEach(result, function(queue, key) {
 	                    	var queuKV = key.split('.');
@@ -34,6 +35,7 @@ appServices.factory('QueueService', function($log, $resource) {
 	            }
 	        });
 	        summaryResource.query();
+	        console.log('workflowStateObj', workflowStateObj);
 	        return workflowStateObj;
 		},
 		
@@ -67,6 +69,25 @@ appServices.factory('QueueService', function($log, $resource) {
 	        queueResource.query();
 	        console.log('workflowStateObj', workflowStateObj);
 	        return true;
+	    },
+	    
+	    moveQueue: function(qS, gwId, qD){
+	    	console.log('moveQueue', 'OK!!');
+	    	var rtn = false;
+	    	var queueResource = $resource('queue/move?queueSource=:queueS&gwId=:gwId&queueDestination=:queueD', {
+	    		queueS:qS, gwId:gwId, queueD:qD}, {
+	            query: {
+	            	method: 'GET', 
+	            	params: {}, 
+	            	isArray: false,
+	            	transformResponse: function (data) {
+	            		console.log('data', data);
+	            	}
+	            }
+	    	});
+
+	        queueResource.query();
+	    	return rtn;
 	    }
     };
     

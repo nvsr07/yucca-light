@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,8 +30,8 @@ public class AttemptController {
         return attemptService.findAll();
     }
    
-    @RequestMapping(value = "/attemptsGW", method = RequestMethod.GET)
-    public @ResponseBody List<AttemptDto> attemptsListGW(String gwId) {
+    @RequestMapping(value = "/attemptsGW", method = RequestMethod.GET, params = {"gwId"})
+    public @ResponseBody List<AttemptDto> attemptsListGW(@RequestParam(value="gwId", required=true) String gwId) {
         return attemptService.findAll(gwId);
     }
 }

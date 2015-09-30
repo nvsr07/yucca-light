@@ -52,7 +52,7 @@ public class AttemptServiceImpl implements AttemptService  {
 					AttemptDto at = new AttemptDto();
 					
 					at.setAttemptGWId(rs.getString("GW_ID"));
-					at.setAttemptId(rs.getLong("ATTEMPT_ID"));
+					at.setAttemptId(rs.getString("ATTEMPT_ID"));
 					at.setAttemptSendTimestamp(rs.getLong("ATTEMPT_SEND_TIMESTAMP"));
 					at.setAttemptReceiveTimestamp(rs.getLong("ATTEMPT_RECEIVE_TIMESTAMP"));
 					at.setAttemptResponse(rs.getString("RESPONSE"));
@@ -75,8 +75,53 @@ public class AttemptServiceImpl implements AttemptService  {
 
 	@Override
 	public List<AttemptDto> findAll(String gwId) {
-		// TODO Auto-generated method stub
-		return null;
+		log.debug("[AttemptServiceImpl::findAll] START");
+		
+		String sql =  " SELECT "
+							+ " GW_ID, "
+							+ " ATTEMPT_ID, "
+							+ " ATTEMPT_SEND_TIMESTAMP, "
+							+ " ATTEMPT_RECEIVE_TIMESTAMP, "
+							+ " RESPONSE, "
+							+ " FROM_STATUS, "
+							+ " TO_STATUS, "
+							+ " RESPONSE, "
+							+ " ENDPOINT "
+					+ " FROM    ATTEMPT_HISTORY "
+					+ " WHERE ATTEMPT_HISTORY.GW_ID = ? "
+					+ " ORDER BY GW_ID DESC";
+
+		log.debug("[AttemptServiceImpl::findAll] - SQL " + sql);
+		System.out.println("=====> [AttemptServiceImpl::findAll] - SQL " + sql);
+
+		try {
+			List<AttemptDto> events = jdbcTemplate.query(sql, new Object[] {gwId}, new RowMapper<AttemptDto>() {
+
+				@Override
+				public AttemptDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+					AttemptDto at = new AttemptDto();
+					
+					at.setAttemptGWId(rs.getString("GW_ID"));
+					at.setAttemptId(rs.getString("ATTEMPT_ID"));
+					at.setAttemptSendTimestamp(rs.getLong("ATTEMPT_SEND_TIMESTAMP"));
+					at.setAttemptReceiveTimestamp(rs.getLong("ATTEMPT_RECEIVE_TIMESTAMP"));
+					at.setAttemptResponse(rs.getString("RESPONSE"));
+					at.setAttemptFromStatus(rs.getString("FROM_STATUS"));
+					at.setAttemptToStatus(rs.getString("TO_STATUS"));
+					at.setAttemptResponse(rs.getString("RESPONSE"));
+					at.setAttemptEndPoint(rs.getString("ENDPOINT"));
+					
+					return at;
+				}
+			});
+
+			return events;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		} finally {
+			log.debug("[AttemptServiceImpl::findAll] END");
+		}
 	}
 
 	@Override
@@ -85,20 +130,16 @@ public class AttemptServiceImpl implements AttemptService  {
 		
 		String sql =  "SELECT "
 							+ " GW_ID, "
-							+ " GW_INSERT_TIMESTAMP, "
-							+ " GW_STATUS, "
-							+ " SOURCE_CODE, "
-							+ " STREAM_CODE, "
-							+ " IS_APPLICATION, "
-							+ " VALUES_JSON, "
-							+ " LAST_ATTEMPT_ID, "
-							+ " LAST_ATTEMPT_SEND_TIMESTAMP, "
-							+ " LAST_ATTEMPT_RECEIVE_TIMESTAMP, "
-							+ " LAST_RESPONSE, "
-							+ " LAST_ENDPOINT, "
-							+ " NUM_ATTEMPT "
-					+ "FROM     EVENTS "
-					+ "ORDER BY LAST_ATTEMPT_SEND_TIMESTAMP DESC";
+							+ " ATTEMPT_ID, "
+							+ " ATTEMPT_SEND_TIMESTAMP, "
+							+ " ATTEMPT_RECEIVE_TIMESTAMP, "
+							+ " RESPONSE, "
+							+ " FROM_STATUS, "
+							+ " TO_STATUS, "
+							+ " RESPONSE, "
+							+ " ENDPOINT "
+					+ "FROM     ATTEMPT_HISTORY "
+					+ "ORDER BY GW_ID DESC";
 
 		log.debug("[AttemptServiceImpl::findAll] - SQL " + sql);
 		System.out.println("=====> [AttemptServiceImpl::findAll] - SQL " + sql);
@@ -112,7 +153,7 @@ public class AttemptServiceImpl implements AttemptService  {
 					AttemptDto at = new AttemptDto();
 					
 					at.setAttemptGWId(rs.getString("GW_ID"));
-					at.setAttemptId(rs.getLong("ATTEMPT_ID"));
+					at.setAttemptId(rs.getString("ATTEMPT_ID"));
 					at.setAttemptSendTimestamp(rs.getLong("ATTEMPT_SEND_TIMESTAMP"));
 					at.setAttemptReceiveTimestamp(rs.getLong("ATTEMPT_RECEIVE_TIMESTAMP"));
 					at.setAttemptResponse(rs.getString("RESPONSE"));
