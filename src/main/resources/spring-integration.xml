@@ -106,8 +106,8 @@ xmlns:task="http://www.springframework.org/schema/task"
 <!-- START: RECEIVED MESSAGE SENT TO YUCCA RT   -->
 <int:channel  id="yuccaLikeRtChannel"/>
 
-<int-jms:channel  id="gw_received" 
-	queue-name="yucca_light.gw_received" 
+<int-jms:channel  id="to_send_rt" 
+	queue-name="yucca_light.to_send_rt" 
 	connection-factory="jmsConnectionFactory"  
 	>
 </int-jms:channel >
@@ -177,6 +177,13 @@ xmlns:task="http://www.springframework.org/schema/task"
 <int:channel  id="sending_a2a_call" 
 	>
 </int:channel>
+
+<int-jms:channel  id="to_send_a2a" 
+	queue-name="yucca_light.to_send_a2a" 
+	connection-factory="jmsConnectionFactory"  
+	>
+</int-jms:channel >
+
 
 
 <int-jms:channel  id="sent_a2a" 

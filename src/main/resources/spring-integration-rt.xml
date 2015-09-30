@@ -25,16 +25,16 @@
 	<int:header-enricher >
 		<int:header name="gwId" expression="headers.id" overwrite="true"/>
 		<int:header name="gwTimestamp" expression="headers.timestamp" overwrite="true"/>
-		<int:header name="gwStatus" value="GW_RECEIVED" overwrite="true"/>
+		<int:header name="gwStatus" value="TO_SEND_RT" overwrite="true"/>
 		<int:header name="Content-type" value="application/json" overwrite="true"/>
 	</int:header-enricher>
 	<int:recipient-list-router >
 		<int:recipient channel="toInsertChannel" />
-		<int:recipient channel="gw_received"/>
+		<int:recipient channel="to_send_rt"/>
 	</int:recipient-list-router>
 </int:chain>
 
-<int:header-enricher input-channel="gw_received" output-channel="sending_rt_progress">
+<int:header-enricher input-channel="to_send_rt" output-channel="sending_rt_progress">
 	<int:header name="gwStatus" value="SENDING_RT_PROGRESS" overwrite="true"/>
 	<int:header name="gwAttemptId" expression="headers.id" overwrite="true"/>
 	<int:header name="gwAttemptEndpoint" value="RT_ENDPOINT" overwrite="true"/>

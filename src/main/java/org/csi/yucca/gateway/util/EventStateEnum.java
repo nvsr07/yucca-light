@@ -2,10 +2,11 @@ package org.csi.yucca.gateway.util;
 
 public enum EventStateEnum {
 
-	GW_RECEIVED, 
+	TO_SEND_RT, 
 	SENDING_RT_PROGRESS,
 	SENDING_FAILED,
 	SENT_RT,
+	TO_SEND_A2A, 
 	SENDING_A2A_PROGRESS,
 	SENT_A2A, 
 	SENT_INVALID

@@ -45,14 +45,16 @@
  </int:poller>
 
 
-<int:header-enricher input-channel="sending_failed" output-channel="sending_a2a_progress" >
+<int:header-enricher input-channel="sending_failed" output-channel="to_send_a2a" >
+	<int:poller ref="a2aPoller"></int:poller>
+</int:header-enricher>
+
+<int:header-enricher input-channel="to_send_a2a" output-channel="sending_a2a_progress" >
 	<int:header name="gwStatus" value="SENDING_A2A_PROGRESS" overwrite="true"/>
 	<int:header name="gwAttemptId" expression="headers.id" overwrite="true"/>
 	<int:header name="Content-type" value="application/json" overwrite="true"/>
 	<int:header name="gwAttemptEndpoint" value="A2A_ENDPOINT" overwrite="true"/>
-	<int:poller ref="a2aPoller"></int:poller>
 </int:header-enricher>
-
 
 <int:aggregator ref="aggregatorEventForA2A"
 	input-channel="sending_a2a_progress" output-channel="sending_a2a_call"
