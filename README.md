@@ -35,6 +35,9 @@ yucca-light is a [Spring boot application](http://projects.spring.io/spring-boot
 ### Build from source
 TBD
 
+### Configure (how to enable autoconfiguration from Yucca Platform)
+TBD
+
 ### Run standalone (using Tomcat embedded)
 TBD
 
@@ -42,8 +45,7 @@ TBD
 TBD
 
 
-Run with embedded or external ActiveMQ
---------------------------------------
+### Run with embedded or external ActiveMQ
 
 In order to run yucca-light using an external ActiveMQ you must configure these properties in your properties file
 ```
@@ -60,4 +62,39 @@ spring.activemq.password=manager
 ``` 
 
 Yucca-light detect external broker url and doesn't start internal ActiveMQ.
+
+
+### Run with embedded or external ActiveMQ
+
+In order to run yucca-light using an external ActiveMQ you must configure these properties in your properties file
+```
+spring.activemq.broker-url
+spring.activemq.user
+spring.activemq.password
+``` 
+
+for example default configuration for ActiveMQ works with:
+```
+spring.activemq.broker-url=tcp://localhost:61616
+spring.activemq.user=system
+spring.activemq.password=manager
+``` 
+
+Yucca-light detect external broker url and doesn't start internal ActiveMQ.
+
+How it works
+---------------
+
+### Web console
+TBD
+
+
+
+### Sending messages in HTTP or MQTT
+TBD
+
+### What happens when there is a network error?
+TBD
+
+
 
