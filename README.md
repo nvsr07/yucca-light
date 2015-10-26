@@ -32,6 +32,16 @@ To use yucca-light you must follow these steps:
 
 yucca-light is a [Spring boot application](http://projects.spring.io/spring-boot/), you can code or use all spring boot capabilities.
 
+### Build from source
+TBD
+
+### Run standalone (using Tomcat embedded)
+TBD
+
+### Deploy on tomcat 8 and run as web application
+TBD
+
+
 Run with embedded or external ActiveMQ
 --------------------------------------
 
