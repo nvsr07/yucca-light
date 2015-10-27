@@ -50,7 +50,7 @@ public class ParseValidationUtil {
 		StreamMetadata streamMetadataConfiguration = streamConfigurationDAO.findLastStreamMetadataConfiguration(tenantCode, streamCode, virtualentityCode);
 		if(streamMetadataConfiguration==null || streamMetadataConfiguration.getSchemaJson()==null){
 			log.error("ERROR: Json schema not found - tenant code: " + tenantCode +" | stream code: " + streamCode  +" | virtualentity code: " + virtualentityCode);
-			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_STREAM_NOT_FOUND);
+			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_STREAM_NOT_FOUND, json.toString());
 		}
 		
 		JsonNode schemaNode = JsonLoader.fromString(streamMetadataConfiguration.getSchemaJson());

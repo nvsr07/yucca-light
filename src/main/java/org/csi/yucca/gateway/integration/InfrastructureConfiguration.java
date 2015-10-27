@@ -31,6 +31,12 @@ public class InfrastructureConfiguration {
 		return new SplitterEventForA2A();
 	}
 	
+	@Bean FromMqttActivator fromMqttActivator()
+	{
+		return new FromMqttActivator();
+	}
+	
+	
 	@Autowired
 	private ConnectionFactory connectionFactory;
 	

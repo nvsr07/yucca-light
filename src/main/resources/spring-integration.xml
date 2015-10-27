@@ -102,6 +102,8 @@ xmlns:task="http://www.springframework.org/schema/task"
  	</beans:property>
 </beans:bean>
 
+<int-jms:publish-subscribe-channel id="from_mqtt" topic-name="input.${yucca.tenant.code}" connection-factory="jmsConnectionFactory"  />
+<int:service-activator input-channel="from_mqtt" ref="fromMqttActivator" ></int:service-activator>
 
 <!-- START: RECEIVED MESSAGE SENT TO YUCCA RT   -->
 <int:channel  id="yuccaLikeRtChannel"/>

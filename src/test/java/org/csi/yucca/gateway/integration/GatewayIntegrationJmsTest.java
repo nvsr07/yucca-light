@@ -53,6 +53,7 @@ public class GatewayIntegrationJmsTest extends AbstractIntegrationTest{
 
     }
 
+	
 	@Test
 	 public void testSend503ValidMessage() throws URISyntaxException, InterruptedException {
 		

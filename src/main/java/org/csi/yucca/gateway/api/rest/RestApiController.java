@@ -1,6 +1,7 @@
 package org.csi.yucca.gateway.api.rest;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,14 +56,10 @@ public class RestApiController {
 		JsonNode event = mapper.readTree(eventStr);		
 		
 		StreamSensorEvent eventDto =InputManager.validate(tenant, event, streamConfigurationDAO);
-		if (tenant.equals("exp"))
-			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_STREAM_NOT_FOUND,"prova");
-
-		
 		try {
 			yuccaLikeService.sendEventToYucca(Conversion.fromStreamSensorEvent2EventMessage(eventDto));
 		} catch (JsonProcessingException e) {
-			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_INPUT_INVALID_DATA_VALUE,e.getMessage());
+			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_INPUT_INVALID_DATA_VALUE,eventStr);
 		}
 				
 		
@@ -87,21 +85,21 @@ public class RestApiController {
 	
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(JsonProcessingException.class)
-	@ResponseBody ErrorOnInbound handleJsonProcessingException(HttpServletRequest req, JsonProcessingException e) {
+	@ResponseBody ErrorOnInbound handleJsonProcessingException(HttpServletRequest req, JsonProcessingException e) throws IOException {
 		ErrorOnInbound errorOnInbound = new ErrorOnInbound();
 		errorOnInbound.setError_code("E012");
 		errorOnInbound.setError_name("Json validation failed");
-				// TODO inserire messaggio originale se possibile
+		errorOnInbound.setMessage(e.getLocation().getSourceRef().toString());
 		return errorOnInbound;
 	} 
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(PropertyBindingException.class)
-	@ResponseBody ErrorOnInbound handleJsonProcessingException(HttpServletRequest req, PropertyBindingException e) {
+	@ResponseBody ErrorOnInbound handleJsonProcessingException(HttpServletRequest req, PropertyBindingException e) throws IOException {
 		ErrorOnInbound errorOnInbound = new ErrorOnInbound();
 		errorOnInbound.setError_code("E012");
 		errorOnInbound.setError_name("Json validation failed");
-				// TODO inserire messaggio originale se possibile
+		errorOnInbound.setMessage(e.getOriginalMessage());
 		return errorOnInbound;
 	} 
 

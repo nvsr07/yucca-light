@@ -56,26 +56,17 @@ public class InsertApiBaseException extends Exception{
 	public InsertApiBaseException(String errorCode, Throwable cause, String additionalMessage) {
 		super(cause);
 		this.errorCode=errorCode;
-		this.errorName=getMessageFromCode(errorCode)+(additionalMessage != null ? additionalMessage : "" ) ;
+		this.errorName=getMessageFromCode(errorCode) ;
+		this.errorMessage= additionalMessage;
 	}
 
 	public InsertApiBaseException(String errorCode, String additionalMessage) {
 		super();
 		this.errorCode=errorCode;
-		this.errorName=getMessageFromCode(errorCode)+(additionalMessage != null ? additionalMessage : "" ) ;
+		this.errorName=getMessageFromCode(errorCode);
+		this.errorMessage= additionalMessage;
 	}
 
-	public InsertApiBaseException(String errorCode, Throwable cause) {
-		super(cause);
-		this.errorCode=errorCode;
-		this.errorName=getMessageFromCode(errorCode);
-	}
-
-	public InsertApiBaseException(String errorCode) {
-		super();
-		this.errorCode=errorCode;
-		this.errorName=getMessageFromCode(errorCode);
-	}
 	
 	
 	

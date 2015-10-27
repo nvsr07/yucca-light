@@ -1,5 +1,7 @@
 package org.csi.yucca.gateway.api.dto;
 
+import org.apache.commons.lang.StringUtils;
+
 public class ErrorOnInbound {
 
 	private String error_name;
@@ -33,5 +35,14 @@ public class ErrorOnInbound {
 		this.message = message;
 	}
 	
-	
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder("{ \"error_name\":\"").append(getError_name()).append("\",");
+		str.append("\"").append("error_code\":\"").append(getError_code()).append("\",");
+		str.append("\"").append("output\":\"").append(getOutput()).append("\",");
+		str.append("\"").append("message\":\"").append(getMessage()).append("\"");
+		str.append("}");
+		return str.toString();
+
+	}
 }
