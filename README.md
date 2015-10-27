@@ -34,20 +34,22 @@ yucca-light is a [Spring boot application](http://projects.spring.io/spring-boot
 
 ### Build from source
 Software required: **Maven 3.2+**, **jdk 1.7.x**
+
 1. Clone or download source on your computer
 2. Check if the environment variable **JAVA_HOME** is properly set with the **jdk 1.7.x** 
 3. Build with **maven** using the command `mvn clean install -DskipTests`
 4. The expected result of the build is the file **target/yucca-light.war**
 
 #### Screenshots
-## check java version ##
+** check java version **
 
 ![check java version](src/site/resources/images/gwiot_build_java_version_check.png)
 
-## build start ##
+** build start**
+
 ![build maven start](src/site/resources/images/gwiot_build_start_maven.png)
 
-## build end ##
+** build end **
 ![build maven end](src/site/resources/images/gwiot_build_end_maven.png)
 
 ### Configure (how to enable autoconfiguration from Yucca Platform)
@@ -64,13 +66,13 @@ Only streams persisted are retreives from Yucca. Streams without associated data
 4. Open in a browser the url http://localhost:8080/yucca-light/console and login with the configured credentials. 
 
 #### Screenshots
-## yucca-light starting... ##
+** yucca-light starting... **
 ![run standalone start](src/site/resources/images/gwiot_run_standalone_start.png)
 
-## yucca-light ready... ##
+** yucca-light ready... **
 ![run standalone end](src/site/resources/images/gwiot_run_standalone_end.png)
 
-## web console... ##
+** web console... **
 ![yucca light web console](src/site/resources/images/gwiot_webconsole_start.png)
 
 
