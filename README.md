@@ -76,7 +76,7 @@ Only streams persisted are retreives from Yucca. Streams without associated data
 ![yucca light web console](src/site/resources/images/gwiot_webconsole_start.png)
 
 
-If you get the error ** org.springframework.context.ApplicationContextException: You have configuration problem ** be sure to have configurated the **application.properties** with mandatory properties.
+If you get the error **org.springframework.context.ApplicationContextException: You have configuration problem** be sure to have configurated the **application.properties** with mandatory properties.
 
 ![run standalone  config error](src/site/resources/images/gwiot_run_standalone_config_error.png)
 
