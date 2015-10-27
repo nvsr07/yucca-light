@@ -63,6 +63,8 @@ appControllers.controller('QueueController', [
 				var queueD = queueDestination.split('.');
 				
 				var rtn = QueueService.moveQueue(queueS[1], gwId, queueD[1]);
+				
+				window.location.reload();
 			}
 			
 			$scope.open = function(startQueue, gwId){
