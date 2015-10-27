@@ -7,7 +7,7 @@ appServices.factory('AttemptService', function($log, $resource) {
 	        var attResource = $resource('attempts?', {}, {
 	            query: {method: 'GET', params: {}, isArray: true}
 	        });
-	        console.log('==============AttemptService==============');
+	        //console.log('==============AttemptService==============');
 	        return attResource.query();
 	    },
 	    getAllByGWID: function (gwId) {
@@ -23,7 +23,7 @@ appServices.factory('AttemptService', function($log, $resource) {
 		            	}
 	            }
 	        });
-	        console.log('==============AttemptService with GWID==============');
+	        //console.log('==============AttemptService with GWID==============');
 	        return attResource.query();
 	    }
 	}
