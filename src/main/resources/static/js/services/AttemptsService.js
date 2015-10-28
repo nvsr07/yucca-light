@@ -19,6 +19,13 @@ appServices.factory('AttemptService', function($log, $resource) {
 		            	transformResponse: function (data) {
 		            		
 		            		var result = angular.fromJson(data);
+		            		//console.log('result in getAllByGWID', result);
+		            		angular.forEach(result, function(r) {
+                    			//console.log('r', r);
+                    			if (r.attemptResponseDetail == null)
+                    				r.attemptResponseDetail = 'OK';
+                            });
+		            		//console.log('result', result);
 		            		return result;
 		            	}
 	            }

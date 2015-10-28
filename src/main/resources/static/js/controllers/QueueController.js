@@ -5,10 +5,20 @@ appControllers.controller('QueueController', [
         'QueueService', 
         'AttemptService',
         function($scope, $modal, $log, QueueService, AttemptsService) {
-        	$scope.queueList = [];
-        	$scope.queueList = QueueService.getAll();
         	
-        	console.log('queueList', $scope.queueList);
+        	$scope.intervalToken = null;
+
+			$scope.getAllQueues = function() {
+				//console.log('Entro in getAllQueues', $scope.queueList);
+				$scope.queueList = [];
+				//console.log('Sono in getAllQueues', $scope.queueList);
+	        	$scope.queueList = QueueService.getAll();
+	        	//console.log('Esco da getAllQueues', $scope.queueList);
+			};
+			
+        	$scope.getAllQueues();
+        	
+        	//console.log('queueList', $scope.queueList);
         	
         	$scope.resendrt = $scope.queueList.s0_to_send_rt.name;
         	$scope.resenda2a = $scope.queueList.s4_to_send_a2a.name;
@@ -36,8 +46,9 @@ appControllers.controller('QueueController', [
 			}
 			
 			$scope.loadAttempts = function(nameQueue, gwId){
+				$scope.stopRefresh();
 				var result = AttemptsService.getAllByGWID(gwId);
-				console.log('result', result);
+				//console.log('result', result);
 
         		angular.forEach($scope.queueList, function(quVal, quKey) {
         			var keyVal = quKey.substr(3);
@@ -51,20 +62,19 @@ appControllers.controller('QueueController', [
         			}
         		});
 
-				console.log('queueList', $scope.queueList);
+        		//console.log('queueList', $scope.queueList);
 			}
 			
 			$scope.moveToQueue = function(queueSource, gwId, queueDestination){
-				console.log('queueSource', queueSource);
-				console.log('gwId', gwId);
-				console.log('queueDestination', queueDestination);
+				//console.log('queueSource', queueSource);
+				//console.log('gwId', gwId);
+				//console.log('queueDestination', queueDestination);
 				
 				var queueS = queueSource.split('.');
 				var queueD = queueDestination.split('.');
 				
 				var rtn = QueueService.moveQueue(queueS[1], gwId, queueD[1]);
-				
-				window.location.reload();
+				$scope.startRefresh();
 			}
 			
 			$scope.open = function(startQueue, gwId){
@@ -90,6 +100,33 @@ appControllers.controller('QueueController', [
 			      $log.info('Modal dismissed at: ' + new Date());
 			    });
 			  };
+			  
+			  $scope.refresh = function(){
+				  $scope.getAllQueues();
+				  $scope.loadMessagesOfQueue(workflowStateObj.s0_to_send_rt.name);
+				  $scope.loadMessagesOfQueue(workflowStateObj.s1_sending_rt_progress.name);
+				  $scope.loadMessagesOfQueue(workflowStateObj.s2_sent_rt.name);
+				  $scope.loadMessagesOfQueue(workflowStateObj.s3_sending_failed.name);
+				  $scope.loadMessagesOfQueue(workflowStateObj.s4_to_send_a2a.name);
+				  $scope.loadMessagesOfQueue(workflowStateObj.s5_sending_a2a_progress.name);
+				  $scope.loadMessagesOfQueue(workflowStateObj.s6_sent_a2a.name);
+				  $scope.loadMessagesOfQueue(workflowStateObj.s7_sent_invalid.name);
+				  $scope.getAllQueues();
+			  };
+			  
+			  $scope.startRefresh = function() {
+				  if ($scope.intervalToken == null)
+					  $scope.intervalToken = setInterval(function(){
+						  $scope.refresh();
+					  }, 1000);
+			  }
+			  
+			  $scope.stopRefresh = function() {
+				  clearInterval($scope.intervalToken);
+				  $scope.intervalToken = null;
+			  }
+			  
+			  $scope.startRefresh();
 		} 
 ]);
 
@@ -103,7 +140,7 @@ appControllers.controller('ModalInstanceCtrl', function ($scope, $modalInstance,
 	$scope.ok = function () {
 		//$modalInstance.close($scope.selected.item);
 		//console.log('formData.chickenEgg', formData.chickenEgg);
-		console.log('scope.radioModel', $scope.radioModel);
+		//console.log('scope.radioModel', $scope.radioModel);
 	};
 
 	$scope.cancel = function () {

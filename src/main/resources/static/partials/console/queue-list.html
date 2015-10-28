@@ -113,8 +113,7 @@
 																			<!-- th translate>ATTEMPT_RECEIVE_TIMESTAMP</th -->
 																			<th translate>FROM_STATUS</th>
 																			<th translate>TO_STATUS</th>
-																			<th translate>RESPONSE</th>
-																			<!-- th translate>RESPONSE_DETAIL</th -->
+																			<th translate>RESPONSE (MSG)</th>
 																			<th translate>ENDPOINT</th>
 																		</tr>
 																	</thead>
@@ -126,8 +125,8 @@
 																			<!-- td>{{att.attemptReceiveTimestamp}}</td -->
 																			<td>{{att.attemptFromStatus}}</td>
 																			<td>{{att.attemptToStatus}}</td>
-																			<td>{{att.attemptResponse}}</td>
-																			<!-- td>{{att.attemptResponseDetail}}</td -->
+																			<!-- td>{{att.attemptResponse}}<br /><a href='#' uib-tooltip='{{att.attemptResponseDetail}}'>Detail</a></td -->
+																			<td>{{att.attemptResponse}}<br /><a href='#'  tooltip-placement='top' tooltip='{{att.attemptResponseDetail}}'>Detail</a></td>
 																			<td>{{att.attemptEndPoint}}</td>
 																		</tr>
 																	</tbody>
