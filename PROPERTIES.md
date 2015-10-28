@@ -41,6 +41,7 @@ yucca.a2a.pollerMaxmessage| The maximum number of failed messages to receive for
 yucca.a2a.pollerFixeddelay| The fixed delay (ms) of poller (resending failed messages)| no |10000
 yucca.metadata.refreshCron| Stream metadata refresh cron expression | no |5 * * * * *
 yucca.metadata.refreshOnStartup| Stream metadata refresh at startup? | no | true
+yucca.metadata.timeToLive|How long messages in final states are retained (in milliseconds)| no | 864000000 (10 days)
 spring.activemq.broker-url| Url for external (or internal as default) ActiveMQ | no|vm:(broker:(mqtt://localhost:1883)?persistent=false)?marshal=false
 spring.activemq.user| username for external (or internal as default) ActiveMQ | no|admin
 spring.activemq.password| username for external (or internal as default) ActiveMQ | no|secret

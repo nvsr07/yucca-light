@@ -110,7 +110,7 @@ xmlns:task="http://www.springframework.org/schema/task"
 
 <int-jms:channel  id="to_send_rt" 
 	queue-name="yucca_light.to_send_rt" 
-	connection-factory="jmsConnectionFactory"  
+	connection-factory="jmsConnectionFactory"
 	>
 </int-jms:channel >
 
@@ -148,6 +148,8 @@ xmlns:task="http://www.springframework.org/schema/task"
 	queue-name="yucca_light.sent_rt" 
 	connection-factory="jmsConnectionFactory"
 	message-driven="false"
+	time-to-live="${yucca.metadata.timeToLive}"  
+	explicit-qos-enabled="true"  
 >
 	
 </int-jms:channel>
@@ -163,6 +165,8 @@ xmlns:task="http://www.springframework.org/schema/task"
 	queue-name="yucca_light.sent_invalid" 
 	connection-factory="jmsConnectionFactory"
 	message-driven="false"
+	time-to-live="${yucca.metadata.timeToLive}"  
+	explicit-qos-enabled="true"  
 >
 
 </int-jms:channel>
@@ -192,6 +196,8 @@ xmlns:task="http://www.springframework.org/schema/task"
 	queue-name="yucca_light.sent_a2a" 
 	connection-factory="jmsConnectionFactory"
 	message-driven="false"
+	time-to-live="${yucca.metadata.timeToLive}"
+	explicit-qos-enabled="true"  
 	>
 </int-jms:channel>
 

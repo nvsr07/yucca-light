@@ -25,6 +25,10 @@ public class YuccaSettings {
 		private String refreshCron;
 		@NotNull
 		private Boolean refreshOnStartup;
+		
+		@NotNull
+		private Long timeToLive;
+		
 		public String getHttpEndpoint() {
 			return httpEndpoint;
 		}
@@ -42,6 +46,12 @@ public class YuccaSettings {
 		}
 		public void setRefreshOnStartup(Boolean refreshOnStartup) {
 			this.refreshOnStartup = refreshOnStartup;
+		}
+		public Long getTimeToLive() {
+			return timeToLive;
+		}
+		public void setTimeToLive(Long timeToLive) {
+			this.timeToLive = timeToLive;
 		}
 	}	
 
