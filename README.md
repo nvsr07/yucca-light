@@ -125,10 +125,10 @@ Yucca-Light has several web consoles.
 **Main web console is available to** [http://localhost:8080/yucca-light/console](http://localhost:8080/yucca-light/console) 
 
 In this console you can:
-1. view configurated streams from remote Yucca
-2. view how many events that there are and theirs state
-3. view events details with list of attempts to send
-4. resend to Yucca a single event using realtime API o A2A API
+ 1. view configurated streams from remote Yucca
+ 2. view how many events that there are and theirs state
+ 3. view events details with list of attempts to send
+ 4. resend to Yucca a single event using realtime API o A2A API
   
 **H2 console is available to** [http://localhost:8080/yucca-light/h2](http://localhost:8080/yucca-light/h2)
 
