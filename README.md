@@ -1,11 +1,8 @@
-WORK IN PROGRESS
-=============
-
-yucca-light (Yucca portable gateway )
+Yucca-Light (Yucca portable gateway )
 =============
 
 
-Yucca-light allows you to easily integrate intelligent objects with a platform yucca (as www.smartdatanet.it ) even when you have network discontinuity
+Yucca-Light allows you to easily integrate intelligent objects with a platform yucca (as www.smartdatanet.it ) even when you have network discontinuity
 
 
 ![yucca-light architecture](src/site/resources/images/gwiot_arch.png)
@@ -19,10 +16,21 @@ First version of Yucca-Light
 * Run with embedded Tomcat or in external Tomcat
 * Run with embedded or external ActiveMQ
 
+Main use case
+----------------------------
+The main use case of Yucca-Light is to implement guaranteed delivery pattern between smartobject and a remote Yucca platform introducing a store in local environment.
+In simple words:
+ 1. Smartobjects send events to an instance of Yucca-Light running in a local area network.
+ 2. Yucca-Light try to send events immediately to the remote Yucca (through Realitme API)
+ 3. If remote Yucca is not available, Yucca-Light persist events in a local ActiveMQ broker.
+ 4. In a schedulated way Yucca-Light try to sends the undelivered events to remote Yucca (through A2A Api)    
+![Main use case](src/site/resources/images/gwiot_main_usecase.png)
+
+
 Getting started
 ---------------
 
-To use yucca-light you must follow these steps:
+To use Yucca-Light you must follow these steps:
 
 1. Choose if you want costumize & build code or just download
 2. Choose if you want run as standalone (using tomcat embedded) or install on tomcat 8
@@ -30,7 +38,7 @@ To use yucca-light you must follow these steps:
 4. Configure properties (see [Properties]( PROPERTIES.md))
 5. Run from shell or deploy on tomcat 8
 
-yucca-light is a [Spring boot application](http://projects.spring.io/spring-boot/), you can code or use all spring boot capabilities.
+Yucca-Light is a [Spring boot application](http://projects.spring.io/spring-boot/), you can code or use all spring boot capabilities.
 
 ### Build from source
 Software required: **Maven 3.2+**, **jdk 1.7.x**
@@ -55,9 +63,9 @@ Software required: **Maven 3.2+**, **jdk 1.7.x**
 ### Configure (how to enable autoconfiguration from Yucca Platform)
 All configurations are set in a file outside the war  (see [Properties]( PROPERTIES.md))
 
-At the startup, Yucca-light automatically download all the stream configurations related to the tenant configured, from the platform yucca.
+At the startup, Yucca-Light automatically download all the stream configurations related to the tenant configured, from the platform yucca.
 
-Only streams persisted are retreives from Yucca. Streams without associated dataset are not managed from yucca-light 
+Only streams persisted are retreives from Yucca. Streams without associated dataset are not managed from Yucca-Light
 
 ### Run standalone (using Tomcat embedded)
 1. Check if the environment variable **JAVA_HOME** is properly set with the **jdk 1.7.x** 
@@ -66,10 +74,10 @@ Only streams persisted are retreives from Yucca. Streams without associated data
 4. Open in a browser the url http://localhost:8080/yucca-light/console and login with the configured credentials. 
 
 #### Screenshots
-**yucca-light starting...**
+**Yucca-Light starting...**
 ![run standalone start](src/site/resources/images/gwiot_run_standalone_start.png)
 
-**yucca-light ready...**
+**Yucca-Light ready...**
 ![run standalone end](src/site/resources/images/gwiot_run_standalone_end.png)
 
 **web console...**
@@ -90,7 +98,7 @@ To  lighten the war is possible to remove the folder **lib-provided** under **yu
 
 ### Run with embedded or external ActiveMQ
 
-In order to run yucca-light using an external ActiveMQ you must configure these properties in your properties file
+In order to run Yucca-Light using an external ActiveMQ you must configure these properties in your properties file
 ```
 spring.activemq.broker-url
 spring.activemq.user
@@ -103,41 +111,43 @@ spring.activemq.broker-url=tcp://localhost:61616
 spring.activemq.user=system
 spring.activemq.password=manager
 ``` 
+Yucca-Light detect external broker url and doesn't start internal ActiveMQ.
 
-Yucca-light detect external broker url and doesn't start internal ActiveMQ.
+Note: in order to use MQTT protocol on Yucca-Light you must configure MQTT in external ActivMQ.
 
-
-### Run with embedded or external ActiveMQ
-
-In order to run yucca-light using an external ActiveMQ you must configure these properties in your properties file
-```
-spring.activemq.broker-url
-spring.activemq.user
-spring.activemq.password
-``` 
-
-for example default configuration for ActiveMQ works with:
-```
-spring.activemq.broker-url=tcp://localhost:61616
-spring.activemq.user=system
-spring.activemq.password=manager
-``` 
-
-Yucca-light detect external broker url and doesn't start internal ActiveMQ.
 
 How it works
 ---------------
 
 ### Web console
-TBD
+Yucca-Light has several web consoles.
 
+**Main web console is available to** [http://localhost:8080/yucca-light/console](http://localhost:8080/yucca-light/console) 
 
+In this console you can:
+1. view configurated streams from remote Yucca
+2. view how many events that there are and theirs state
+3. view events details with list of attempts to send
+4. resend to Yucca a single event using realtime API o A2A API
+  
+**H2 console is available to** [http://localhost:8080/yucca-light/h2](http://localhost:8080/yucca-light/h2)
+
+This console is standard H2 Console available using  org.h2.server.web.WebServlet.
+
+Note that H2 is used only to persist stream configurations and attempts to send, events are persisted in local ActiveMQ. 
+
+**Metrics console is available to**[http://localhost:8080/yucca-light/metrics](http://localhost:8080/yucca-light/metrics)
+
+This is metrics services from [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-metrics.html).
 
 ### Sending messages in HTTP or MQTT
-TBD
+Yucca-Light exposes same realtime endpoints and same validation logic of Yucca platform.
+Yucca A2A endpoint (for historical data) is not implemented.
 
-### What happens when there is a network error?
-TBD
+You can send event in http to endpoint (localhost:8080/yucca-light/api/input/smartlab) or you can connect to MQTT endpoint (defaul 127.0.0.1:1883) and publish evento to input/<tenant> topic. 
+
+As original Yucca, Yucca-Light send error messages on mqtt topic (output/<tenant>/errors) or as HTTP output (for http calls) with the same format (see [Developer Center Smartdatanet](http://developer.smartdatanet.it))
+
 
 
 
