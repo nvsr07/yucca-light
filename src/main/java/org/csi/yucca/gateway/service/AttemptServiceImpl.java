@@ -55,10 +55,10 @@ public class AttemptServiceImpl implements AttemptService  {
 					at.setAttemptId(rs.getString("ATTEMPT_ID"));
 					at.setAttemptSendTimestamp(rs.getLong("ATTEMPT_SEND_TIMESTAMP"));
 					at.setAttemptReceiveTimestamp(rs.getLong("ATTEMPT_RECEIVE_TIMESTAMP"));
-					at.setAttemptResponse(rs.getString("RESPONSE"));
 					at.setAttemptFromStatus(rs.getString("FROM_STATUS"));
 					at.setAttemptToStatus(rs.getString("TO_STATUS"));
 					at.setAttemptResponse(rs.getString("RESPONSE"));
+					at.setAttemptResponseDetail(rs.getString("RESPONSE_DETAIL"));
 					at.setAttemptEndPoint(rs.getString("ENDPOINT"));
 					
 					return at;
@@ -82,12 +82,12 @@ public class AttemptServiceImpl implements AttemptService  {
 							+ " ATTEMPT_ID, "
 							+ " ATTEMPT_SEND_TIMESTAMP, "
 							+ " ATTEMPT_RECEIVE_TIMESTAMP, "
-							+ " RESPONSE, "
 							+ " FROM_STATUS, "
 							+ " TO_STATUS, "
 							+ " RESPONSE, "
+							+ " RESPONSE_DETAIL, "
 							+ " ENDPOINT "
-					+ " FROM    ATTEMPT_HISTORY "
+					+ " FROM  ATTEMPT_HISTORY "
 					+ " WHERE ATTEMPT_HISTORY.GW_ID = ? "
 					+ " ORDER BY GW_ID DESC";
 
@@ -106,11 +106,16 @@ public class AttemptServiceImpl implements AttemptService  {
 					at.setAttemptId(rs.getString("ATTEMPT_ID"));
 					at.setAttemptSendTimestamp(rs.getLong("ATTEMPT_SEND_TIMESTAMP"));
 					at.setAttemptReceiveTimestamp(rs.getLong("ATTEMPT_RECEIVE_TIMESTAMP"));
-					at.setAttemptResponse(rs.getString("RESPONSE"));
 					at.setAttemptFromStatus(rs.getString("FROM_STATUS"));
 					at.setAttemptToStatus(rs.getString("TO_STATUS"));
 					at.setAttemptResponse(rs.getString("RESPONSE"));
+					at.setAttemptResponseDetail(rs.getString("RESPONSE_DETAIL"));
 					at.setAttemptEndPoint(rs.getString("ENDPOINT"));
+
+
+					System.out.println("RESPONSE = " + rs.getString("RESPONSE"));
+					System.out.println("RESPONSE_DETAIL = " + rs.getString("RESPONSE_DETAIL"));
+					System.out.println("RECORD = " + at.toString());
 					
 					return at;
 				}
@@ -133,10 +138,10 @@ public class AttemptServiceImpl implements AttemptService  {
 							+ " ATTEMPT_ID, "
 							+ " ATTEMPT_SEND_TIMESTAMP, "
 							+ " ATTEMPT_RECEIVE_TIMESTAMP, "
-							+ " RESPONSE, "
 							+ " FROM_STATUS, "
 							+ " TO_STATUS, "
 							+ " RESPONSE, "
+							+ " RESPONSE_DETAIL, "
 							+ " ENDPOINT "
 					+ "FROM     ATTEMPT_HISTORY "
 					+ "ORDER BY GW_ID DESC";
@@ -156,10 +161,10 @@ public class AttemptServiceImpl implements AttemptService  {
 					at.setAttemptId(rs.getString("ATTEMPT_ID"));
 					at.setAttemptSendTimestamp(rs.getLong("ATTEMPT_SEND_TIMESTAMP"));
 					at.setAttemptReceiveTimestamp(rs.getLong("ATTEMPT_RECEIVE_TIMESTAMP"));
-					at.setAttemptResponse(rs.getString("RESPONSE"));
 					at.setAttemptFromStatus(rs.getString("FROM_STATUS"));
 					at.setAttemptToStatus(rs.getString("TO_STATUS"));
 					at.setAttemptResponse(rs.getString("RESPONSE"));
+					at.setAttemptResponseDetail(rs.getString("RESPONSE_DETAIL"));
 					at.setAttemptEndPoint(rs.getString("ENDPOINT"));
 					
 					return at;
