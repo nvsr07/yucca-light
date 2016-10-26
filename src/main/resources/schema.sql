@@ -24,12 +24,12 @@ create table if not exists ATTEMPT_HISTORY (
 								   
 create table if not exists STREAM_METADATA_CONFIGURATION (
 								   TENANT_CODE varchar(50), 
-								   STREAM_CODE varchar(50), 
-								   VIRTUALENTITY_CODE varchar(50),
+								   STREAM_CODE varchar(100), 
+								   VIRTUALENTITY_CODE varchar(100),
 								   DEPLOYMENT_VERSION long,
 								   STREAM_NAME varchar(50),
 								   VIRTUALENTITY_NAME varchar(50),
-								   VIRTUALENTITY_DESCRIPTION varchar(50),
+								   VIRTUALENTITY_DESCRIPTION varchar(250),
 								   VIRTUALENTITY_TYPE varchar(50),
 								   VIRTUALENTITY_CATEGORY varchar(50),
 								   LASTUPDATE_TIMESTAMP long,

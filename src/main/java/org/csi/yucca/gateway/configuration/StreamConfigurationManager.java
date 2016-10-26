@@ -77,7 +77,6 @@ public class StreamConfigurationManager {
 	public void saveConfiguration(String streamJson) {
 
 		ObjectMapper mapper = new ObjectMapper();
-
 		StreamConfiguration[] streamConfigurations = null;
 
 		try {

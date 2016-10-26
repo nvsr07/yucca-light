@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class StreamConfiguration {
 	private String streamCode;
 	private String streamName;
