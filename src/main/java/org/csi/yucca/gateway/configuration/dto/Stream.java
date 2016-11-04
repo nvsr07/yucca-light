@@ -1,5 +1,8 @@
 package org.csi.yucca.gateway.configuration.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Stream {
 
 	private String virtualEntityName;
