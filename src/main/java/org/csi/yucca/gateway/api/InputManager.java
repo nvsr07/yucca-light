@@ -48,7 +48,7 @@ public class InputManager {
 			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_INVALID_COMPONENTS, event.toString());
 
 		try {
-			isOk = ParseValidationUtil.isValidVersusSchema(event, tenant, eventDto.getStream(), eventDto.getSensor(), streamConfigurationDAO);
+			isOk = ParseValidationUtil.isValidVersusSchema(event, tenant, eventDto.getStream(), eventDto.getSource(), streamConfigurationDAO);
 		} catch (InsertApiBaseException | ProcessingException | IOException e) {
 			throw new InsertApiBaseException(InsertApiBaseException.ERROR_CODE_STREAM_NOT_FOUND, event.toString());
 		}
