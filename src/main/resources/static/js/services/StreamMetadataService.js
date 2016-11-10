@@ -29,7 +29,10 @@ appServices.factory('StreamMetadataService', function($log, $resource) {
 								}
 							}
             			    var exampleMessage = "{\"stream\": \""+streamMetadataComplete.streamCode+"\",\n";
-            			    exampleMessage += "  \"sensor\": \"" + streamMetadataComplete.virtualEntityCode+ "\",\n";
+            			    if (streamMetadataComplete.virtualEntityType=='Application')
+            			    	exampleMessage += "  \"application\": \"" + streamMetadataComplete.virtualEntityCode+ "\",\n";
+            			    else
+            			    	exampleMessage += "  \"sensor\": \"" + streamMetadataComplete.virtualEntityCode+ "\",\n";
             			    exampleMessage += "  \"values\":\n";
             			    exampleMessage += "    [{\"time\": \"2015-09-14T18:48:34Z\",\n";
             			    exampleMessage += "      \"components\":{\n";
