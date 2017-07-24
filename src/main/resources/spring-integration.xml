@@ -30,9 +30,10 @@ xmlns:task="http://www.springframework.org/schema/task"
 
 <task:annotation-driven />
 	<!-- general bean -->
-<beans:bean name="httpRestRTTemplate" class="org.springframework.boot.test.TestRestTemplate">
+<beans:bean name="httpRestRTTemplate" class="org.csi.yucca.gateway.util.YuccaRestTemplate">
  	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
  	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
+ 	<beans:constructor-arg  value="${yucca.realtime.httpTimeout}"></beans:constructor-arg>
  	<beans:constructor-arg>
         <beans:array value-type="org.springframework.boot.test.TestRestTemplate.HttpClientOption">
         </beans:array>
@@ -66,9 +67,10 @@ xmlns:task="http://www.springframework.org/schema/task"
  	</beans:property>
 </beans:bean>
 
-<beans:bean name="httpRestA2ATemplate" class="org.springframework.boot.test.TestRestTemplate">
+<beans:bean name="httpRestA2ATemplate" class="org.csi.yucca.gateway.util.YuccaRestTemplate">
  	<beans:constructor-arg  value="${yucca.tenant.username}"></beans:constructor-arg>
  	<beans:constructor-arg  value="${yucca.tenant.password}"></beans:constructor-arg>
+ 	<beans:constructor-arg  value="${yucca.a2a.httpTimeout}"></beans:constructor-arg>
  	<beans:constructor-arg>
         <beans:array value-type="org.springframework.boot.test.TestRestTemplate.HttpClientOption">
         </beans:array>
